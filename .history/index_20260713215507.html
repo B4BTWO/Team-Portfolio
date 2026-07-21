@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Digital Design &amp; Development Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css?v=1.3" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
+    />
+    <style>
+      /* Instant, zero-JS curtain wipe animation on page load */
+      .curtain-wipe {
+        position: fixed;
+        top: 0;
+        left: -20vw;
+        width: 140vw;
+        height: 100vh;
+        background: linear-gradient(
+          135deg,
+          #7c3aed 0%,
+          #5b21b6 50%,
+          #2e1065 100%
+        );
+        z-index: 99999;
+        pointer-events: none;
+        transform: translateX(0%) skewX(-12deg);
+        animation: curtain-wipe-out 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      @keyframes curtain-wipe-out {
+        0% {
+          transform: translateX(0%) skewX(-12deg);
+        }
+        100% {
+          transform: translateX(-100%) skewX(-12deg);
+        }
+      }
+    </style>
+    <script>
+      // Apply theme instantly on page parse to prevent layout flashes
+      if (localStorage.getItem("theme") === "dark") {
+        document.documentElement.classList.add("dark-mode");
+      }
+    </script>
+  </head>
+  <body>
+    <!-- ============ NAV ============ -->
+    <header class="navbar">
+      <div class="logo">
+        <a
+          href="index.html"
+          style="
+            color: inherit;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          "
+        >
+          <span class="logo-mark"></span>
+        </a>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="project.html">Project</a></li>
+          <li><a href="teams.html">Teams</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="contact.html" class="nav-cta">Start project</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- ============ HERO ============ -->
+    <section class="hero">
+      <div>
+        <div class="eyebrow mono">Digital design &amp; development studio</div>
+        <h1>
+          <span id="typewriter-prefix"></span><br /><span
+            class="accent"
+            id="typewriter"
+          ></span
+          ><span class="caret" id="caret"></span>
+        </h1>
+        <p class="reveal d1">
+          We're a small studio that designs and builds products, brands, and
+          interfaces for teams who care about the details. Nine years,
+          forty-plus launches, one obsession: craft.
+        </p>
+        <div class="btn-row reveal d2">
+          <a href="project.html" class="btn-primary">See our work</a>
+          <a href="#resume" class="btn-ghost view-resume-trigger"
+            >View our resume
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MARQUEE SECTION ============ -->
+    <div class="marquee-container reveal d3">
+      <div class="marquee-track">
+        <div class="marquee-content">
+          <span><i class="devicon-html5-plain colored"></i> html5</span>
+          <span><i class="devicon-css3-plain colored"></i> css3</span>
+          <span
+            ><i class="devicon-javascript-plain colored"></i> javascript</span
+          >
+          <span
+            ><i class="devicon-typescript-plain colored"></i> typescript</span
+          >
+          <span><i class="devicon-react-original colored"></i> react</span>
+          <span><i class="devicon-nodejs-plain colored"></i> node.js</span>
+          <span><i class="devicon-express-original"></i> express</span>
+          <span><i class="devicon-mongodb-plain colored"></i> mongodb</span>
+          <span><i class="devicon-firebase-plain colored"></i> firebase</span>
+          <span><i class="devicon-git-plain colored"></i> git</span>
+          <span><i class="devicon-figma-plain colored"></i> figma</span>
+          <span
+            ><i class="devicon-tailwindcss-original colored"></i> tailwind</span
+          >
+        </div>
+        <div class="marquee-content" aria-hidden="true">
+          <span><i class="devicon-html5-plain colored"></i> html5</span>
+          <span><i class="devicon-css3-plain colored"></i> css3</span>
+          <span
+            ><i class="devicon-javascript-plain colored"></i> javascript</span
+          >
+          <span
+            ><i class="devicon-typescript-plain colored"></i> typescript</span
+          >
+          <span><i class="devicon-react-original colored"></i> react</span>
+          <span><i class="devicon-nodejs-plain colored"></i> node.js</span>
+          <span><i class="devicon-express-original"></i> express</span>
+          <span><i class="devicon-mongodb-plain colored"></i> mongodb</span>
+          <span><i class="devicon-firebase-plain colored"></i> firebase</span>
+          <span><i class="devicon-git-plain colored"></i> git</span>
+          <span><i class="devicon-figma-plain colored"></i> figma</span>
+          <span
+            ><i class="devicon-tailwindcss-original colored"></i> tailwind</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ SKILLS SECTION ============ -->
+    <section
+      id="skills"
+      class="reveal d4"
+      style="margin-top: 90px; padding: 0 24px"
+    >
+      <div class="section-head" style="text-align: center; margin-bottom: 40px">
+        <div>
+          <div
+            class="eyebrow mono"
+            style="justify-content: center; display: flex"
+          >
+            Technologies
+          </div>
+          <h2 style="margin-top: 10px">Our Skills</h2>
+        </div>
+      </div>
+      <div class="skills-badges-container">
+        <div class="skill-badge">
+          <i class="devicon-html5-plain colored"></i> HTML5
+        </div>
+        <div class="skill-badge">
+          <i class="devicon-css3-plain colored"></i> CSS3
+        </div>
+        <div class="skill-badge">
+          <i class="devicon-javascript-plain colored"></i> JavaScript
+        </div>
+        <div class="skill-badge">
+          <i class="devicon-typescript-plain colored"></i> TypeScript
+        </div>
+        <div class="skill-badge">
+          <i class="devicon-react-original colored"></i> React
+        </div>
+        <div class="skill-badge">
+          <i class="devicon-nodejs-plain colored"></i> Node.js
+        </div>
+        <div class="skill-badge">
+          <i class="devicon-express-original"></i> Express
+        </div>
+        <div class="skill-badge">
+          <i class="devicon-mongodb-plain colored"></i> MongoDB
+        </div>
+        <div class="skill-badge">
+          <i class="devicon-firebase-plain colored"></i> Firebase
+        </div>
+        <div class="skill-badge">
+          <i class="devicon-git-plain colored"></i> Git
+        </div>
+        <div class="skill-badge">
+          <i class="devicon-figma-plain colored"></i> Figma
+        </div>
+        <div class="skill-badge">
+          <i class="devicon-tailwindcss-original colored"></i> Tailwind CSS
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT US ============ -->
+    <section
+      id="about-preview"
+      class="reveal d4"
+      style="margin-top: 90px; padding: 0 24px"
+    >
+      <div class="section-head">
+        <div>
+          <div class="eyebrow mono">About us</div>
+          <h2>Who we are</h2>
+        </div>
+      </div>
+      <div class="home-about-grid">
+        <p class="home-about-desc">
+          We're a four-person studio — one team leader and fullstack developer,
+          one design lead, one frontend developer, and one backend developer —
+          working together on every project from first sketch to shipped code.
+          We don't separate design from engineering, we work with only a few
+          partners at a time, and you always talk directly to the people
+          actually building your product.
+        </p>
+        <div class="home-about-photo-rotator" aria-hidden="true">
+          <img src="assets/kenneth.png" alt="" class="rotator-img r1" />
+          <img src="assets/jenz.png" alt="" class="rotator-img r2" />
+          <img src="assets/jamil.png" alt="" class="rotator-img r3" />
+          <img src="assets/pacay.png" alt="" class="rotator-img r4" />
+        </div>
+      </div>
+      <div style="display: flex; justify-content: center; margin-top: 32px">
+        <a href="teams.html" class="btn-ghost">More about us</a>
+      </div>
+    </section>
+
+    <!-- ============ PROJECTS PREVIEW ============ -->
+    <section
+      id="home-projects"
+      class="reveal d4"
+      style="margin-top: 90px; margin-bottom: 90px"
+    >
+      <div class="home-projects-head">
+        <div class="eyebrow mono">Selected work</div>
+        <h2>Projects we've worked on</h2>
+        <p>
+          A quick look at recent team work across client websites and product
+          design.
+        </p>
+      </div>
+
+      <div class="home-project-groups">
+        <div class="home-project-group">
+          <h3 class="home-project-group-title">Websites</h3>
+          <div class="home-project-grid">
+            <a href="project.html" class="home-project-card">
+              <div class="home-project-media" aria-hidden="true">
+                <img
+                  src="assets/projects/project1-cover.jpg"
+                  alt=""
+                  class="home-project-img"
+                  onerror="this.style.display = 'none'"
+                />
+                <span class="project-media-placeholder mono">Preview</span>
+              </div>
+              <div class="home-project-card-body">
+                <h4>Magnify Vision Media</h4>
+                <p>
+                  A premium marketing agency website with reusable UI
+                  components, smooth interactions, and consistent branding.
+                </p>
+              </div>
+            </a>
+
+            <a href="project.html" class="home-project-card">
+              <div class="home-project-media" aria-hidden="true">
+                <img
+                  src="assets/projects/project2-cover.jpg"
+                  alt=""
+                  class="home-project-img"
+                  onerror="this.style.display = 'none'"
+                />
+                <span class="project-media-placeholder mono">Preview</span>
+              </div>
+              <div class="home-project-card-body">
+                <h4>Bun &amp; Bite</h4>
+                <p>
+                  A modern restaurant website with a promotional hero, organized
+                  menu sections, and smooth navigation.
+                </p>
+              </div>
+            </a>
+
+            <a href="project.html" class="home-project-card">
+              <div class="home-project-media" aria-hidden="true">
+                <img
+                  src="assets/projects/project3-cover.jpg"
+                  alt=""
+                  class="home-project-img"
+                  onerror="this.style.display = 'none'"
+                />
+                <span class="project-media-placeholder mono">Preview</span>
+              </div>
+              <div class="home-project-card-body">
+                <h4>NewDay Child Coaching</h4>
+                <p>
+                  A coaching website presenting resources and the
+                  PATHWise&trade; framework through a clean, conversion-focused
+                  layout.
+                </p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div class="home-project-group">
+          <h3 class="home-project-group-title">UI / UX</h3>
+          <div class="home-project-grid">
+            <a href="project.html" class="home-project-card">
+              <div class="home-project-media" aria-hidden="true">
+                <img
+                  src="assets/projects/project4-cover.jpg"
+                  alt=""
+                  class="home-project-img"
+                  onerror="this.style.display = 'none'"
+                />
+                <span class="project-media-placeholder mono">Preview</span>
+              </div>
+              <div class="home-project-card-body">
+                <h4>PathWise Mobile Project</h4>
+                <p>
+                  A mobile app prototype built around complete user flows,
+                  reusable components, and mobile-first UX.
+                </p>
+              </div>
+            </a>
+
+            <a href="project.html" class="home-project-card">
+              <div class="home-project-media" aria-hidden="true">
+                <img
+                  src="assets/projects/project5-cover.jpg"
+                  alt=""
+                  class="home-project-img"
+                  onerror="this.style.display = 'none'"
+                />
+                <span class="project-media-placeholder mono">Preview</span>
+              </div>
+              <div class="home-project-card-body">
+                <h4>Where to Know</h4>
+                <p>
+                  A business intelligence dashboard that turns hotel reporting
+                  data into clear, actionable visuals.
+                </p>
+              </div>
+            </a>
+
+            <a href="project.html" class="home-project-card">
+              <div class="home-project-media" aria-hidden="true">
+                <img
+                  src="assets/projects/project6-cover.jpg"
+                  alt=""
+                  class="home-project-img"
+                  onerror="this.style.display = 'none'"
+                />
+                <span class="project-media-placeholder mono">Preview</span>
+              </div>
+              <div class="home-project-card-body">
+                <h4>YourRide Landing Page</h4>
+                <p>
+                  A premium electric-vehicle landing page concept with a
+                  minimalist hero and strong visual hierarchy.
+                </p>
+              </div>
+            </a>
+
+            <a href="project.html" class="home-project-card">
+              <div class="home-project-media" aria-hidden="true">
+                <img
+                  src="assets/projects/project7-cover.jpg"
+                  alt=""
+                  class="home-project-img"
+                  onerror="this.style.display = 'none'"
+                />
+                <span class="project-media-placeholder mono">Preview</span>
+              </div>
+              <div class="home-project-card-body">
+                <h4>Devialet Phantom Landing Page</h4>
+                <p>
+                  A cinematic, luxury product landing page designed around the
+                  Devialet Phantom speaker.
+                </p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="home-project-cta">
+        <a href="project.html" class="btn-primary">View all projects</a>
+      </div>
+    </section>
+
+    <!-- ============ START A PROJECT CTA ============ -->
+    <section
+      id="home-cta"
+      class="reveal d4"
+      style="margin-top: 90px; margin-bottom: 90px; padding: 0 24px"
+    >
+      <div class="home-cta-box">
+        <div
+          class="eyebrow mono"
+          style="justify-content: center; display: flex"
+        >
+          Let's talk
+        </div>
+        <h2>
+          Have a project in mind?<br /><span class="accent"
+            >Let's build it together.</span
+          >
+        </h2>
+        <a href="contact.html" class="btn-primary home-cta-btn"
+          >Start a project</a
+        >
+      </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <!-- ============ FOOTER ============ -->
+    <footer class="footer-section">
+      <div class="footer-container">
+        <div class="footer-brand-col">
+          <p class="footer-brand-desc">
+            Bridging the gap between creative vision and technical execution.
+          </p>
+        </div>
+        <div class="footer-nav-col">
+          <div class="footer-label">Links</div>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="project.html">Projects</a></li>
+            <li><a href="teams.html">Team</a></li>
+          </ul>
+        </div>
+        <div class="footer-connect-col">
+          <div class="footer-label">Connect</div>
+          <ul class="footer-links">
+            <li><a href="contact.html">Contact Us</a></li>
+            <li>
+              <a href="mailto:kcbianzon@gmail.com">kcbianzon@gmail.com</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>© 2026. All rights reserved.</div>
+        <div class="footer-socials">
+          <a href="#" aria-label="Facebook">Facebook</a>
+          <a href="#" aria-label="Instagram">Instagram</a>
+          <a href="#" aria-label="LinkedIn">LinkedIn</a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ============ RESUME PANEL OVERLAY (CENTERED MODAL) ============ -->
+    <div id="resume-panel" class="resume-panel">
+      <div class="resume-panel-backdrop"></div>
+      <div class="resume-panel-content">
+        <button class="resume-panel-close" aria-label="Close panel">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+
+        <h2
+          style="
+            font-family: &quot;Syne&quot;, sans-serif;
+            font-weight: 700;
+            color: var(--ink);
+            margin: 0 0 8px 0;
+            font-size: 26px;
+          "
+        >
+          Our Team Resumes
+        </h2>
+        <p
+          class="mono"
+          style="
+            color: var(--purple-600);
+            font-size: 12px;
+            margin: 0 0 24px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 700;
+          "
+        >
+          Hover the pocket to fan out. Click a card to open it.
+        </p>
+
+        <!-- Stacked fanning pocket -->
+        <div class="resume-pocket-container">
+          <div class="resume-pocket">
+            <!-- Jamil's Resume Card -->
+            <div class="resume-card-wrapper card-jamil" data-person="jamil">
+              <div class="resume-card">
+                <div class="resume-card-header">
+                  <div class="resume-card-avatar avatar-jamil"></div>
+                  <div>
+                    <div class="resume-card-name">Jamil</div>
+                    <div class="resume-card-title">Full-Stack Engineer</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Jenz's Resume Card -->
+            <div class="resume-card-wrapper card-jenz" data-person="jenz">
+              <div class="resume-card">
+                <div class="resume-card-header">
+                  <div class="resume-card-avatar avatar-jenz"></div>
+                  <div>
+                    <div class="resume-card-name">Jenz</div>
+                    <div class="resume-card-title">Creative Director</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Kenneth's Resume Card -->
+            <div class="resume-card-wrapper card-kenneth" data-person="kenneth">
+              <div class="resume-card">
+                <div class="resume-card-header">
+                  <div class="resume-card-avatar avatar-kenneth"></div>
+                  <div>
+                    <div class="resume-card-name">Kenneth</div>
+                    <div class="resume-card-title">Product Designer</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Chirsjohn's Resume Card -->
+            <div class="resume-card-wrapper card-pacay" data-person="pacay">
+              <div class="resume-card">
+                <div class="resume-card-header">
+                  <div class="resume-card-avatar avatar-pacay"></div>
+                  <div>
+                    <div class="resume-card-name">Chirsjohn</div>
+                    <div class="resume-card-title">Backend Engineer</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pocket front lip covering bottom half -->
+            <div class="resume-pocket-front">
+              <div class="pocket-label">&lt;/ Our Team &gt;</div>
+              <div class="pocket-hint">Hover to Fan Out</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detailed Resume View Area -->
+        <div id="detailed-resume-viewer" class="detailed-resume-viewer">
+          <button class="back-to-pocket-btn mono">&larr; Back to Pocket</button>
+
+          <!-- Kenneth's full resume — replace src with the uploaded PDF/PNG -->
+          <div class="detailed-resume-content" id="detail-kenneth">
+            <div class="detail-resume-image">
+              <img
+                src="resumes/kenneth.png"
+                alt="Kenneth's resume"
+                onerror="this.style.display = 'none'"
+              />
+            </div>
+          </div>
+
+          <!-- Jenz's full resume — replace src with the uploaded PDF/PNG -->
+          <div class="detailed-resume-content" id="detail-jenz">
+            <div class="detail-resume-image">
+              <img
+                src="resumes/jenz.png"
+                alt="Jenz's resume"
+                onerror="this.style.display = 'none'"
+              />
+            </div>
+          </div>
+
+          <!-- Jamil's full resume — replace src with the uploaded PDF/PNG -->
+          <div class="detailed-resume-content" id="detail-jamil">
+            <div class="detail-resume-image">
+              <img
+                src="resumes/jamil.png"
+                alt="Jamil's resume"
+                onerror="this.style.display = 'none'"
+              />
+            </div>
+          </div>
+
+          <!-- Chirsjohn's full resume — replace src with the uploaded PDF/PNG -->
+          <div class="detailed-resume-content" id="detail-pacay">
+            <div class="detail-resume-image">
+              <img
+                src="resumes/pacay.png"
+                alt="Chirsjohn's resume"
+                onerror="this.style.display = 'none'"
+              />
+            </div>
+          </div>
+        </div>
+
+        <button
+          class="btn-primary print-resume-action"
+          style="
+            margin-top: 24px;
+            padding: 10px 22px;
+            font-size: 13px;
+            z-index: 15;
+            display: none;
+          "
+        >
+          Print Resume
+        </button>
+      </div>
+    </div>
+
+    <button class="theme-toggle" aria-label="Toggle dark mode">
+      <svg
+        class="sun-icon"
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2v2"></path>
+        <path d="M12 20v2"></path>
+        <path d="M4.93 4.93l1.41 1.41"></path>
+        <path d="M17.66 17.66l1.41 1.41"></path>
+        <path d="M2 12h2"></path>
+        <path d="M20 12h2"></path>
+        <path d="M6.34 17.66l-1.41 1.41"></path>
+        <path d="M19.07 4.93l-1.41 1.41"></path>
+      </svg>
+      <svg
+        class="moon-icon"
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+      </svg>
+    </button>
+    <div class="custom-cursor"></div>
+    <div class="curtain-wipe"></div>
+
+    <script src="script.js?v=1.3"></script>
+  </body>
+</html>
