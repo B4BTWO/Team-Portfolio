@@ -2471,6 +2471,25 @@ html.dark-mode .theme-toggle .moon-icon {
   border-bottom: 1px solid var(--line);
 }
 
+.project-sidebar-subgroup {
+  margin-top: 24px;
+}
+
+.project-sidebar-subgroup-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px; /* Bumped up from 13px */
+  font-weight: 700;
+  letter-spacing: 0.15em; /* Wider spacing for better legibility */
+  text-transform: uppercase;
+  color: var(--purple-400); /* Adds a pop of color to separate it from the gray project links */
+  margin: 0 0 16px; /* Gives more breathing room before the buttons start */
+}
+
+.project-sidebar-item .project-sidebar-name {
+  font-size: 16px; /* Bumped from 15px to make the project names easier to read */
+  line-height: 1.5;
+}
+
 .project-sidebar-list {
   display: grid;
   gap: 4px;
@@ -2720,7 +2739,7 @@ html.dark-mode .project-media-nav {
 .project-features-list {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 0 0 28px;
   display: grid;
   gap: 9px;
   max-width: 62ch;
