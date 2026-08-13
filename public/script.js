@@ -51,7 +51,7 @@
   function typePrefix() {
     if (!prefixEl) {
       // Fallback if element is not found
-      setTimeout(tick, 300);
+      setTimeout(tick, 80);
       return;
     }
 
@@ -61,7 +61,7 @@
       setTimeout(typePrefix, typingSpeed);
     } else {
       // Prefix typing done, pause briefly then start cycling dynamic phrases
-      setTimeout(tick, 300);
+      setTimeout(tick, 100);
     }
   }
 
@@ -84,7 +84,7 @@
 
     // Finished typing the last phrase, proceed to reveal the rest of the page
     if (isLastPhrase) {
-      setTimeout(revealRest, 400);
+      setTimeout(revealRest, 80);
       return;
     }
 
@@ -532,10 +532,81 @@
 
     var projectCarousels = new Map();
 
+    // 5c-ii. Generic "browse grid" widget: any project panel can contain a
+    // grid of tiles that expand into a detail view with its own carousel.
+    // Used by Hero Section, Web Design, and Mobile App Design.
+    var gridWidgets = new Map(); // panelId -> { reset, showDetail }
+
+    function initGridWidget(panel) {
+      var gridView = panel.querySelector("[data-grid-view]");
+      var gridItems = panel.querySelectorAll("[data-grid-target]");
+      var detailViews = panel.querySelectorAll("[data-detail-view]");
+      var backBtns = panel.querySelectorAll("[data-grid-back]");
+      var carousels = new Map();
+
+      function reset() {
+        if (gridView) gridView.classList.add("is-active");
+        detailViews.forEach(function (view) {
+          view.classList.remove("is-active");
+          var existing = carousels.get(view);
+          if (existing) existing.stop();
+        });
+      }
+
+      function showDetail(id) {
+        if (gridView) gridView.classList.remove("is-active");
+        detailViews.forEach(function (view) {
+          var isMatch = view.dataset.detailView === id;
+          view.classList.toggle("is-active", isMatch);
+
+          if (isMatch) {
+            if (!carousels.has(view)) {
+              carousels.set(view, initProjectCarousel(view));
+            }
+            var carousel = carousels.get(view);
+            if (carousel) carousel.start();
+          } else {
+            var existing = carousels.get(view);
+            if (existing) existing.stop();
+          }
+        });
+      }
+
+      gridItems.forEach(function (item) {
+        item.addEventListener("click", function () {
+          showDetail(item.dataset.gridTarget);
+        });
+      });
+
+      backBtns.forEach(function (btn) {
+        btn.addEventListener("click", reset);
+      });
+
+      return { reset: reset, showDetail: showDetail };
+    }
+
+    projectPanels.forEach(function (panel) {
+      if (panel.querySelector("[data-grid-view]")) {
+        gridWidgets.set(panel.dataset.panel, initGridWidget(panel));
+      }
+    });
+
     function showProjectPanel(id) {
+      // Whenever the sidebar drives a panel change, reset every grid widget
+      // (Hero Section, Web Design, Mobile App Design, etc.) back to its
+      // grid view and stop any running detail carousel.
+      gridWidgets.forEach(function (widget) {
+        widget.reset();
+      });
+
       projectPanels.forEach(function (panel) {
         var isMatch = panel.dataset.panel === id;
         panel.classList.toggle("is-active", isMatch);
+
+        // Panels that contain a grid widget manage their own internal
+        // carousels (one per detail view), so they're excluded from the
+        // generic single-carousel-per-panel logic below.
+        if (gridWidgets.has(panel.dataset.panel)) return;
 
         if (isMatch) {
           if (!projectCarousels.has(panel)) {
@@ -564,32 +635,54 @@
     });
 
     // Initialize the carousel for whichever panel starts active.
+    // Supports two hash formats:
+    //   #<panelId>              -> opens that project panel
+    //   #<panelId>-<detailId>   -> opens that panel's grid widget and jumps
+    //                              straight to the matching detail view
     function getProjectFromHash() {
       var hash = window.location.hash.replace("#", "").trim();
-      if (!hash) return "";
+      if (!hash) return { panelId: "", detailId: "" };
 
-      var matchingPanel = document.querySelector(
-        '[data-panel="' + hash + '"]',
-      );
-      return matchingPanel ? hash : "";
+      if (document.querySelector('[data-panel="' + hash + '"]')) {
+        return { panelId: hash, detailId: "" };
+      }
+
+      var dashIndex = hash.indexOf("-");
+      if (dashIndex > -1) {
+        var panelId = hash.slice(0, dashIndex);
+        var detailId = hash.slice(dashIndex + 1);
+        var matchingDetail = document.querySelector(
+          '[data-panel="' + panelId + '"] [data-detail-view="' + detailId + '"]',
+        );
+        if (matchingDetail) {
+          return { panelId: panelId, detailId: detailId };
+        }
+      }
+
+      return { panelId: "", detailId: "" };
+    }
+
+    function openFromHashResult(result) {
+      if (!result.panelId) return;
+      showProjectPanel(result.panelId);
+      if (result.detailId && gridWidgets.has(result.panelId)) {
+        gridWidgets.get(result.panelId).showDetail(result.detailId);
+      }
     }
 
     var initialPanel = document.querySelector(
       ".project-viewer-panel.is-active",
     );
-    var initialProjectId = getProjectFromHash();
-    if (!initialProjectId && initialPanel && initialPanel.dataset.panel) {
-      initialProjectId = initialPanel.dataset.panel;
+    var initialHashResult = getProjectFromHash();
+    if (!initialHashResult.panelId && initialPanel && initialPanel.dataset.panel) {
+      initialHashResult = { panelId: initialPanel.dataset.panel, detailId: "" };
     }
-    if (initialProjectId) {
-      showProjectPanel(initialProjectId);
+    if (initialHashResult.panelId) {
+      openFromHashResult(initialHashResult);
     }
 
     window.addEventListener("hashchange", function () {
-      var nextProjectId = getProjectFromHash();
-      if (nextProjectId) {
-        showProjectPanel(nextProjectId);
-      }
+      openFromHashResult(getProjectFromHash());
     });
 
     // 5c. Center-Outward Scramble Text Animation
@@ -853,6 +946,21 @@
         }
       });
     }
+    
+    // Sidebar Accordion Toggle
+    var sidebarToggles = document.querySelectorAll('.project-sidebar-subgroup-toggle');
+    sidebarToggles.forEach(function (toggleBtn) {
+      toggleBtn.addEventListener('click', function () {
+        // Toggle the active class for the arrow rotation
+        this.classList.toggle('is-active');
+        
+        // Find the wrapper right after the button and toggle its open class
+        var listWrapper = this.nextElementSibling;
+        if (listWrapper && listWrapper.classList.contains('project-sidebar-list-wrapper')) {
+          listWrapper.classList.toggle('is-open');
+        }
+      });
+    });
 
     // 5d. Contact form — builds and opens a pre-filled email to kcbianzon@gmail.com
     var contactForm = document.getElementById("contact-form");
@@ -912,3 +1020,17 @@
     }
   });
 })();
+
+// Scroll to the top of the project viewer when a project is clicked
+document.querySelectorAll('.project-sidebar-item, .browse-grid-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const workSection = document.getElementById('work');
+    if (workSection) {
+      // Smoothly scroll to the top of the #work section
+      workSection.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }
+  });
+})

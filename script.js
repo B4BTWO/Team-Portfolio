@@ -51,7 +51,7 @@
   function typePrefix() {
     if (!prefixEl) {
       // Fallback if element is not found
-      setTimeout(tick, 300);
+      setTimeout(tick, 80);
       return;
     }
 
@@ -61,7 +61,7 @@
       setTimeout(typePrefix, typingSpeed);
     } else {
       // Prefix typing done, pause briefly then start cycling dynamic phrases
-      setTimeout(tick, 300);
+      setTimeout(tick, 100);
     }
   }
 
@@ -84,7 +84,7 @@
 
     // Finished typing the last phrase, proceed to reveal the rest of the page
     if (isLastPhrase) {
-      setTimeout(revealRest, 400);
+      setTimeout(revealRest, 80);
       return;
     }
 
