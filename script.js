@@ -117,6 +117,133 @@
       typePrefix();
     }
 
+    // React Bits DriftWall, adapted to this site's vanilla JS setup.
+    (function initDriftWall() {
+      var mount = document.getElementById("hero-drift-wall");
+      if (!mount) return;
+
+      var items = [
+        { image: "assets/projects/project1-1.png", title: "Project 1", href: "project.html" },
+        { image: "assets/projects/project1-2.png", title: "Project 1", href: "project.html" },
+        { image: "assets/projects/project1-3.png", title: "Project 1", href: "project.html" },
+        { image: "assets/projects/project2-1.png", title: "Project 2", href: "project.html" },
+        { image: "assets/projects/project2-2.png", title: "Project 2", href: "project.html" },
+        { image: "assets/projects/project2-3.png", title: "Project 2", href: "project.html" },
+        { image: "assets/projects/project3-1.png", title: "Project 3", href: "project.html" },
+        { image: "assets/projects/project3-2.png", title: "Project 3", href: "project.html" },
+        { image: "assets/projects/project3-3.png", title: "Project 3", href: "project.html" },
+        { image: "assets/projects/project4-1.png", title: "Project 4", href: "project.html" },
+        { image: "assets/projects/project4-2.png", title: "Project 4", href: "project.html" },
+        { image: "assets/projects/project4-3.png", title: "Project 4", href: "project.html" },
+        { image: "assets/projects/project5-1.png", title: "Project 5", href: "project.html" },
+        { image: "assets/projects/project5-2.png", title: "Project 5", href: "project.html" },
+        { image: "assets/projects/project5-3.png", title: "Project 5", href: "project.html" },
+        { image: "assets/projects/project6-1.png", title: "Project 6", href: "project.html" },
+        { image: "assets/projects/project7-1.png", title: "Project 7", href: "project.html" }
+      ];
+      var config = { columns: 5, tileWidth: 200, tileHeight: 132, gap: 18, tilt: 16, turn: -14, perspective: 1200, depth: 120, speed: 42, direction: "up", variance: 0.45, parallax: 0.6, lift: 64, fade: 0.6, dim: 0.55, overlayColor: "#060010" };
+      var wall = document.createElement("div");
+      var plane = document.createElement("div");
+      var tracks = [];
+      var offsets = [];
+      var pointer = { x: 0, y: 0 };
+      var pointerDamped = { x: 0, y: 0 };
+      var activeTile = null;
+      var hoveredColumn = -1;
+      var lastTime = null;
+
+      wall.className = "drift-wall";
+      wall.setAttribute("role", "group");
+      wall.setAttribute("aria-label", "Drifting wall of tiles");
+      wall.style.setProperty("--dw-tile-w", config.tileWidth + "px");
+      wall.style.setProperty("--dw-tile-h", config.tileHeight + "px");
+      wall.style.setProperty("--dw-gap", config.gap + "px");
+      wall.style.setProperty("--dw-perspective", config.perspective + "px");
+      wall.style.setProperty("--dw-lift", config.lift + "px");
+      wall.style.setProperty("--dw-dim", config.dim);
+      wall.style.setProperty("--dw-overlay", config.overlayColor);
+      wall.style.setProperty("--dw-edge", Math.max(0, (1 - config.fade) * 100) + "%");
+      plane.className = "drift-wall__plane";
+
+      function columnFactor(index) {
+        return 1 + config.variance * ((((index * 0.6180339887 + 0.35) % 1) * 2) - 1);
+      }
+
+      for (var columnIndex = 0; columnIndex < config.columns; columnIndex++) {
+        var column = document.createElement("div");
+        var track = document.createElement("div");
+        column.className = "drift-wall__col";
+        track.className = "drift-wall__track";
+        for (var copy = 0; copy < 4; copy++) {
+          items.forEach(function (item, itemIndex) {
+            var tile = document.createElement("a");
+            var inner = document.createElement("span");
+            var image = document.createElement("img");
+            var overlay = document.createElement("span");
+            tile.className = "drift-wall__tile";
+            tile.href = item.href;
+            tile.target = "_blank";
+            tile.rel = "noreferrer noopener";
+            tile.dataset.column = columnIndex;
+            tile.dataset.tile = columnIndex + "-" + copy + "-" + itemIndex;
+            inner.className = "drift-wall__inner";
+            image.src = item.image;
+            image.alt = item.title;
+            image.loading = "lazy";
+            image.draggable = false;
+            overlay.className = "drift-wall__overlay";
+            inner.appendChild(image);
+            inner.appendChild(overlay);
+            tile.appendChild(inner);
+            track.appendChild(tile);
+          });
+        }
+        column.appendChild(track);
+        plane.appendChild(column);
+        tracks.push(track);
+        offsets.push((config.tileHeight + config.gap) * items.length * ((columnIndex * 0.37) % 1));
+      }
+      wall.appendChild(plane);
+      mount.appendChild(wall);
+
+      function setActive(tile) {
+        if (activeTile === tile) return;
+        if (activeTile) activeTile.classList.remove("is-active");
+        activeTile = tile;
+        hoveredColumn = tile ? Number(tile.dataset.column) : -1;
+        if (activeTile) activeTile.classList.add("is-active");
+      }
+
+      wall.addEventListener("pointermove", function (event) {
+        var rect = wall.getBoundingClientRect();
+        pointer.x = (event.clientX - rect.left) / rect.width - 0.5;
+        pointer.y = (event.clientY - rect.top) / rect.height - 0.5;
+        setActive(event.target.closest(".drift-wall__tile"));
+      });
+      wall.addEventListener("pointerleave", function () { pointer.x = 0; pointer.y = 0; setActive(null); });
+      wall.addEventListener("focusin", function (event) { setActive(event.target.closest(".drift-wall__tile")); });
+      wall.addEventListener("focusout", function () { setActive(null); });
+
+      function animate(timestamp) {
+        if (lastTime === null) lastTime = timestamp;
+        var delta = Math.min(0.05, (timestamp - lastTime) / 1000);
+        lastTime = timestamp;
+        var damp = 1 - Math.exp(-delta / 0.12);
+        pointerDamped.x += (pointer.x * config.parallax * 8 - pointerDamped.x) * damp;
+        pointerDamped.y += (-pointer.y * config.parallax * 8 - pointerDamped.y) * damp;
+        plane.style.transform = "translate(-50%, -50%) scale(1.18) rotateX(" + (config.tilt + pointerDamped.y) + "deg) rotateY(" + (config.turn + pointerDamped.x) + "deg) translateZ(" + (-config.depth) + "px)";
+        tracks.forEach(function (track, index) {
+          var direction = index % 2 === 0 ? 1 : -1;
+          var velocity = hoveredColumn === index ? 0 : config.speed * columnFactor(index) * direction;
+          var cycle = (config.tileHeight + config.gap) * items.length;
+          offsets[index] = (offsets[index] + velocity * delta + cycle) % cycle;
+          track.style.transform = "translate3d(0, " + (-offsets[index]) + "px, 0)";
+        });
+        window.requestAnimationFrame(animate);
+      }
+      if (!reduceMotion) window.requestAnimationFrame(animate);
+    })();
+
     // 1. Infinite marquee track logic with smooth hover deceleration
     var marqueeTrack = document.querySelector(".marquee-track");
     if (marqueeTrack) {
