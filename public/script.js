@@ -547,7 +547,17 @@
       function reset() {
         if (gridView) gridView.classList.add("is-active");
         detailViews.forEach(function (view) {
-          view.classList.remove("is-active");
+          if (view.classList.contains("is-active")) {
+            if (view.classList.contains("detail-view-image-only")) {
+              view.classList.add("is-closing");
+              setTimeout(function () {
+                view.classList.remove("is-active");
+                view.classList.remove("is-closing");
+              }, 400); // 400ms match the new CSS exit animation
+            } else {
+              view.classList.remove("is-active");
+            }
+          }
           var existing = carousels.get(view);
           if (existing) existing.stop();
         });
@@ -670,13 +680,24 @@
       }
     }
 
-    var initialPanel = document.querySelector(
-      ".project-viewer-panel.is-active",
-    );
     var initialHashResult = getProjectFromHash();
-    if (!initialHashResult.panelId && initialPanel && initialPanel.dataset.panel) {
-      initialHashResult = { panelId: initialPanel.dataset.panel, detailId: "" };
+    
+    // If there is no specific project hash in the URL, find a default to load
+    if (!initialHashResult.panelId) {
+      var initialPanel = document.querySelector(".project-viewer-panel.is-active");
+      
+      if (initialPanel && initialPanel.dataset.panel) {
+        // Load the panel explicitly marked 'is-active' in HTML
+        initialHashResult = { panelId: initialPanel.dataset.panel, detailId: "" };
+      } else {
+        // Fallback: Automatically load the very first project in the sidebar list
+        var firstItem = document.querySelector(".project-sidebar-item");
+        if (firstItem && firstItem.dataset.project) {
+          initialHashResult = { panelId: firstItem.dataset.project, detailId: "" };
+        }
+      }
     }
+    
     if (initialHashResult.panelId) {
       openFromHashResult(initialHashResult);
     }
@@ -1021,16 +1042,75 @@
   });
 })();
 
-// Scroll to the top of the project viewer when a project is clicked
-document.querySelectorAll('.project-sidebar-item, .browse-grid-item').forEach(item => {
-  item.addEventListener('click', () => {
-    const workSection = document.getElementById('work');
-    if (workSection) {
-      // Smoothly scroll to the top of the #work section
-      workSection.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
+document.addEventListener("DOMContentLoaded", function () {
+  var reduceMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+  var lightboxScrollY = 0;
+
+  function isImageOnlyLightboxOpen() {
+    return Boolean(
+      document.querySelector(".detail-view-image-only.is-active"),
+    );
+  }
+
+  function syncImageOnlyLightbox() {
+    var isOpen = isImageOnlyLightboxOpen();
+    var wasOpen = document.body.classList.contains("lightbox-open");
+
+    if (isOpen && !wasOpen) {
+      lightboxScrollY = window.scrollY;
+      document.body.classList.add("lightbox-open");
+      window.scrollTo({
+        top: 0,
+        behavior: reduceMotion ? "auto" : "smooth",
+      });
+      return;
+    }
+
+    if (!isOpen && wasOpen) {
+      document.body.classList.remove("lightbox-open");
+      window.scrollTo({
+        top: lightboxScrollY,
+        behavior: "auto",
       });
     }
+  }
+
+  document.querySelectorAll(".detail-view-image-only").forEach(function (view) {
+    view.addEventListener("click", function () {
+      var backBtn = view.querySelector("[data-grid-back]");
+      if (backBtn) backBtn.click();
+    });
   });
-})
+
+  document
+    .querySelectorAll(".project-sidebar-item, .browse-grid-item")
+    .forEach(function (item) {
+      item.addEventListener("click", function () {
+        window.requestAnimationFrame(function () {
+          if (isImageOnlyLightboxOpen()) {
+            syncImageOnlyLightbox();
+            return;
+          }
+
+          var workSection = document.getElementById("work");
+          if (workSection) {
+            workSection.scrollIntoView({
+              behavior: reduceMotion ? "auto" : "smooth",
+              block: "start",
+            });
+          }
+        });
+      });
+    });
+
+  new MutationObserver(syncImageOnlyLightbox).observe(document.body, {
+    attributes: true,
+    childList: true,
+    subtree: true,
+    attributeFilter: ["class"],
+  });
+
+  syncImageOnlyLightbox();
+});
