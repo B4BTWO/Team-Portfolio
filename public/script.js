@@ -51,7 +51,7 @@
   function typePrefix() {
     if (!prefixEl) {
       // Fallback if element is not found
-      setTimeout(tick, 300);
+      setTimeout(tick, 80);
       return;
     }
 
@@ -61,7 +61,7 @@
       setTimeout(typePrefix, typingSpeed);
     } else {
       // Prefix typing done, pause briefly then start cycling dynamic phrases
-      setTimeout(tick, 300);
+      setTimeout(tick, 100);
     }
   }
 
@@ -84,7 +84,7 @@
 
     // Finished typing the last phrase, proceed to reveal the rest of the page
     if (isLastPhrase) {
-      setTimeout(revealRest, 400);
+      setTimeout(revealRest, 80);
       return;
     }
 
@@ -116,6 +116,79 @@
     } else {
       typePrefix();
     }
+
+    // React Bits DriftWall adapted for this static JavaScript site.
+    (function initDriftWall() {
+      var mount = document.getElementById("hero-drift-wall");
+      if (!mount) return;
+      var items = ["herosection1-1.png", "herosection2-1.png", "herosection3-1.png", "herosection4-1.png", "herosection5-1.png", "herosection6.png", "herosection7.png", "herosection8.png", "herosection9.png", "herosection10.png"].map(function (image, index) {
+        return { image: "assets/projects/" + image, title: "Project " + (index + 1), href: "project.html" };
+      });
+      var config = { columns: 5, tileWidth: 200, tileHeight: 132, gap: 18, tilt: 16, turn: -14, perspective: 1200, depth: 120, speed: 42, variance: 0.45, parallax: 0.6, lift: 64, fade: 0.6, dim: 0.55, overlayColor: "#060010" };
+      var wall = document.createElement("div"), plane = document.createElement("div"), tracks = [], offsets = [], pointer = { x: 0, y: 0 }, damped = { x: 0, y: 0 }, hoveredColumn = -1, activeTile = null, lastTime = null;
+      wall.className = "drift-wall";
+      wall.setAttribute("role", "group");
+      wall.setAttribute("aria-label", "Drifting wall of project tiles");
+      [["--dw-tile-w", config.tileWidth + "px"], ["--dw-tile-h", config.tileHeight + "px"], ["--dw-gap", config.gap + "px"], ["--dw-perspective", config.perspective + "px"], ["--dw-lift", config.lift + "px"], ["--dw-dim", config.dim], ["--dw-overlay", config.overlayColor], ["--dw-edge", Math.max(0, (1 - config.fade) * 100) + "%"]].forEach(function (entry) { wall.style.setProperty(entry[0], entry[1]); });
+      plane.className = "drift-wall__plane";
+      function factor(index) { return 1 + config.variance * ((((index * 0.6180339887 + 0.35) % 1) * 2) - 1); }
+      for (var columnIndex = 0; columnIndex < config.columns; columnIndex++) {
+        var column = document.createElement("div"), track = document.createElement("div");
+        column.className = "drift-wall__col";
+        track.className = "drift-wall__track";
+        for (var copy = 0; copy < 3; copy++) items.forEach(function (item) {
+          var tile = document.createElement("a"), inner = document.createElement("span"), image = document.createElement("img"), overlay = document.createElement("span");
+          tile.className = "drift-wall__tile";
+          tile.href = item.href;
+          tile.dataset.column = columnIndex;
+          inner.className = "drift-wall__inner";
+          image.src = item.image;
+          image.alt = item.title;
+          image.loading = "lazy";
+          overlay.className = "drift-wall__overlay";
+          inner.append(image, overlay);
+          tile.appendChild(inner);
+          track.appendChild(tile);
+        });
+        column.appendChild(track);
+        plane.appendChild(column);
+        tracks.push(track);
+        offsets.push((config.tileHeight + config.gap) * items.length * ((columnIndex * 0.37) % 1));
+      }
+      wall.appendChild(plane);
+      mount.appendChild(wall);
+      function activate(tile) {
+        if (activeTile === tile) return;
+        if (activeTile) activeTile.classList.remove("is-active");
+        activeTile = tile;
+        hoveredColumn = tile ? Number(tile.dataset.column) : -1;
+        if (activeTile) activeTile.classList.add("is-active");
+      }
+      wall.addEventListener("pointermove", function (event) {
+        var rect = wall.getBoundingClientRect();
+        pointer.x = (event.clientX - rect.left) / rect.width - 0.5;
+        pointer.y = (event.clientY - rect.top) / rect.height - 0.5;
+        activate(event.target.closest(".drift-wall__tile"));
+      });
+      wall.addEventListener("pointerleave", function () { pointer = { x: 0, y: 0 }; activate(null); });
+      function animate(timestamp) {
+        if (lastTime === null) lastTime = timestamp;
+        var delta = Math.min(0.05, (timestamp - lastTime) / 1000);
+        lastTime = timestamp;
+        var ease = 1 - Math.exp(-delta / 0.12);
+        damped.x += (pointer.x * config.parallax * 8 - damped.x) * ease;
+        damped.y += (-pointer.y * config.parallax * 8 - damped.y) * ease;
+        plane.style.transform = "translate(-50%, -50%) scale(1.18) rotateX(" + (config.tilt + damped.y) + "deg) rotateY(" + (config.turn + damped.x) + "deg) translateZ(" + (-config.depth) + "px)";
+        tracks.forEach(function (track, index) {
+          var cycle = (config.tileHeight + config.gap) * items.length;
+          var velocity = hoveredColumn === index ? 0 : config.speed * factor(index) * (index % 2 === 0 ? 1 : -1);
+          offsets[index] = (offsets[index] + velocity * delta + cycle) % cycle;
+          track.style.transform = "translate3d(0, " + (-offsets[index]) + "px, 0)";
+        });
+        window.requestAnimationFrame(animate);
+      }
+      if (!reduceMotion) window.requestAnimationFrame(animate);
+    })();
 
     // 1. Infinite marquee track logic with smooth hover deceleration
     var marqueeTrack = document.querySelector(".marquee-track");
@@ -532,10 +605,91 @@
 
     var projectCarousels = new Map();
 
+    // 5c-ii. Generic "browse grid" widget: any project panel can contain a
+    // grid of tiles that expand into a detail view with its own carousel.
+    // Used by Hero Section, Web Design, and Mobile App Design.
+    var gridWidgets = new Map(); // panelId -> { reset, showDetail }
+
+    function initGridWidget(panel) {
+      var gridView = panel.querySelector("[data-grid-view]");
+      var gridItems = panel.querySelectorAll("[data-grid-target]");
+      var detailViews = panel.querySelectorAll("[data-detail-view]");
+      var backBtns = panel.querySelectorAll("[data-grid-back]");
+      var carousels = new Map();
+
+      function reset() {
+        if (gridView) gridView.classList.add("is-active");
+        detailViews.forEach(function (view) {
+          if (view.classList.contains("is-active")) {
+            if (view.classList.contains("detail-view-image-only")) {
+              view.classList.add("is-closing");
+              setTimeout(function () {
+                view.classList.remove("is-active");
+                view.classList.remove("is-closing");
+              }, 400); // 400ms match the new CSS exit animation
+            } else {
+              view.classList.remove("is-active");
+            }
+          }
+          var existing = carousels.get(view);
+          if (existing) existing.stop();
+        });
+      }
+
+      function showDetail(id) {
+        if (gridView) gridView.classList.remove("is-active");
+        detailViews.forEach(function (view) {
+          var isMatch = view.dataset.detailView === id;
+          view.classList.toggle("is-active", isMatch);
+
+          if (isMatch) {
+            if (!carousels.has(view)) {
+              carousels.set(view, initProjectCarousel(view));
+            }
+            var carousel = carousels.get(view);
+            if (carousel) carousel.start();
+          } else {
+            var existing = carousels.get(view);
+            if (existing) existing.stop();
+          }
+        });
+      }
+
+      gridItems.forEach(function (item) {
+        item.addEventListener("click", function () {
+          showDetail(item.dataset.gridTarget);
+        });
+      });
+
+      backBtns.forEach(function (btn) {
+        btn.addEventListener("click", reset);
+      });
+
+      return { reset: reset, showDetail: showDetail };
+    }
+
+    projectPanels.forEach(function (panel) {
+      if (panel.querySelector("[data-grid-view]")) {
+        gridWidgets.set(panel.dataset.panel, initGridWidget(panel));
+      }
+    });
+
     function showProjectPanel(id) {
+      // Whenever the sidebar drives a panel change, reset every grid widget
+      // (Hero Section, Web Design, Mobile App Design, etc.) back to its
+      // grid view and stop any running detail carousel.
+      gridWidgets.forEach(function (widget) {
+        widget.reset();
+      });
+
       projectPanels.forEach(function (panel) {
         var isMatch = panel.dataset.panel === id;
         panel.classList.toggle("is-active", isMatch);
+
+        // Panels that contain a grid widget manage their own internal
+        // carousels (one per detail view), so they're excluded from the
+        // generic single-carousel-per-panel logic below.
+        if (gridWidgets.has(panel.dataset.panel)) return;
 
         if (isMatch) {
           if (!projectCarousels.has(panel)) {
@@ -564,32 +718,65 @@
     });
 
     // Initialize the carousel for whichever panel starts active.
+    // Supports two hash formats:
+    //   #<panelId>              -> opens that project panel
+    //   #<panelId>-<detailId>   -> opens that panel's grid widget and jumps
+    //                              straight to the matching detail view
     function getProjectFromHash() {
       var hash = window.location.hash.replace("#", "").trim();
-      if (!hash) return "";
+      if (!hash) return { panelId: "", detailId: "" };
 
-      var matchingPanel = document.querySelector(
-        '[data-panel="' + hash + '"]',
-      );
-      return matchingPanel ? hash : "";
+      if (document.querySelector('[data-panel="' + hash + '"]')) {
+        return { panelId: hash, detailId: "" };
+      }
+
+      var dashIndex = hash.indexOf("-");
+      if (dashIndex > -1) {
+        var panelId = hash.slice(0, dashIndex);
+        var detailId = hash.slice(dashIndex + 1);
+        var matchingDetail = document.querySelector(
+          '[data-panel="' + panelId + '"] [data-detail-view="' + detailId + '"]',
+        );
+        if (matchingDetail) {
+          return { panelId: panelId, detailId: detailId };
+        }
+      }
+
+      return { panelId: "", detailId: "" };
     }
 
-    var initialPanel = document.querySelector(
-      ".project-viewer-panel.is-active",
-    );
-    var initialProjectId = getProjectFromHash();
-    if (!initialProjectId && initialPanel && initialPanel.dataset.panel) {
-      initialProjectId = initialPanel.dataset.panel;
+    function openFromHashResult(result) {
+      if (!result.panelId) return;
+      showProjectPanel(result.panelId);
+      if (result.detailId && gridWidgets.has(result.panelId)) {
+        gridWidgets.get(result.panelId).showDetail(result.detailId);
+      }
     }
-    if (initialProjectId) {
-      showProjectPanel(initialProjectId);
+
+    var initialHashResult = getProjectFromHash();
+    
+    // If there is no specific project hash in the URL, find a default to load
+    if (!initialHashResult.panelId) {
+      var initialPanel = document.querySelector(".project-viewer-panel.is-active");
+      
+      if (initialPanel && initialPanel.dataset.panel) {
+        // Load the panel explicitly marked 'is-active' in HTML
+        initialHashResult = { panelId: initialPanel.dataset.panel, detailId: "" };
+      } else {
+        // Fallback: Automatically load the very first project in the sidebar list
+        var firstItem = document.querySelector(".project-sidebar-item");
+        if (firstItem && firstItem.dataset.project) {
+          initialHashResult = { panelId: firstItem.dataset.project, detailId: "" };
+        }
+      }
+    }
+    
+    if (initialHashResult.panelId) {
+      openFromHashResult(initialHashResult);
     }
 
     window.addEventListener("hashchange", function () {
-      var nextProjectId = getProjectFromHash();
-      if (nextProjectId) {
-        showProjectPanel(nextProjectId);
-      }
+      openFromHashResult(getProjectFromHash());
     });
 
     // 5c. Center-Outward Scramble Text Animation
@@ -685,9 +872,21 @@
       }
       updateCursor();
 
+      // DriftWall owns its hover treatment; keep the global expanding cursor out of it.
+      var driftWallEl = document.querySelector(".drift-wall");
+      if (driftWallEl) {
+        driftWallEl.addEventListener("mouseenter", function () {
+          cursor.style.opacity = "0";
+          cursor.classList.remove("hovering");
+        });
+        driftWallEl.addEventListener("mouseleave", function () {
+          cursor.style.opacity = "1";
+        });
+      }
+
       // snap to interactive elements
       var interactives = document.querySelectorAll(
-        "a, button, .work-card, nav a, .nav-cta, .skill-badge",
+        "a:not(.drift-wall__tile), button, .work-card, nav a, .nav-cta, .skill-badge",
       );
       interactives.forEach(function (el) {
         el.addEventListener("mouseenter", function () {
@@ -853,6 +1052,21 @@
         }
       });
     }
+    
+    // Sidebar Accordion Toggle
+    var sidebarToggles = document.querySelectorAll('.project-sidebar-subgroup-toggle');
+    sidebarToggles.forEach(function (toggleBtn) {
+      toggleBtn.addEventListener('click', function () {
+        // Toggle the active class for the arrow rotation
+        this.classList.toggle('is-active');
+        
+        // Find the wrapper right after the button and toggle its open class
+        var listWrapper = this.nextElementSibling;
+        if (listWrapper && listWrapper.classList.contains('project-sidebar-list-wrapper')) {
+          listWrapper.classList.toggle('is-open');
+        }
+      });
+    });
 
     // 5d. Contact form — builds and opens a pre-filled email to kcbianzon@gmail.com
     var contactForm = document.getElementById("contact-form");
@@ -912,3 +1126,76 @@
     }
   });
 })();
+
+document.addEventListener("DOMContentLoaded", function () {
+  var reduceMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+  var lightboxScrollY = 0;
+
+  function isImageOnlyLightboxOpen() {
+    return Boolean(
+      document.querySelector(".detail-view-image-only.is-active"),
+    );
+  }
+
+  function syncImageOnlyLightbox() {
+    var isOpen = isImageOnlyLightboxOpen();
+    var wasOpen = document.body.classList.contains("lightbox-open");
+
+    if (isOpen && !wasOpen) {
+      lightboxScrollY = window.scrollY;
+      document.body.classList.add("lightbox-open");
+      window.scrollTo({
+        top: 0,
+        behavior: reduceMotion ? "auto" : "smooth",
+      });
+      return;
+    }
+
+    if (!isOpen && wasOpen) {
+      document.body.classList.remove("lightbox-open");
+      window.scrollTo({
+        top: lightboxScrollY,
+        behavior: "auto",
+      });
+    }
+  }
+
+  document.querySelectorAll(".detail-view-image-only").forEach(function (view) {
+    view.addEventListener("click", function () {
+      var backBtn = view.querySelector("[data-grid-back]");
+      if (backBtn) backBtn.click();
+    });
+  });
+
+  document
+    .querySelectorAll(".project-sidebar-item, .browse-grid-item")
+    .forEach(function (item) {
+      item.addEventListener("click", function () {
+        window.requestAnimationFrame(function () {
+          if (isImageOnlyLightboxOpen()) {
+            syncImageOnlyLightbox();
+            return;
+          }
+
+          var workSection = document.getElementById("work");
+          if (workSection) {
+            workSection.scrollIntoView({
+              behavior: reduceMotion ? "auto" : "smooth",
+              block: "start",
+            });
+          }
+        });
+      });
+    });
+
+  new MutationObserver(syncImageOnlyLightbox).observe(document.body, {
+    attributes: true,
+    childList: true,
+    subtree: true,
+    attributeFilter: ["class"],
+  });
+
+  syncImageOnlyLightbox();
+});

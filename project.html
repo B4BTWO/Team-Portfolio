@@ -99,7 +99,7 @@
                 type="button"
                 data-project="magnify"
               >
-                <span class="project-sidebar-index mono">01</span>
+                <span class="project-sidebar-index mono"></span>
                 <span class="project-sidebar-name">Magnify Vision Media</span>
               </button>
               <button
@@ -107,7 +107,7 @@
                 type="button"
                 data-project="bunbite"
               >
-                <span class="project-sidebar-index mono">02</span>
+                <span class="project-sidebar-index mono"></span>
                 <span class="project-sidebar-name">Bun &amp; Bite</span>
               </button>
               <button
@@ -115,51 +115,76 @@
                 type="button"
                 data-project="newday"
               >
-                <span class="project-sidebar-index mono">03</span>
+                <span class="project-sidebar-index mono"></span>
                 <span class="project-sidebar-name">NewDay Child Coaching</span>
+              </button>
+
+              <button
+                class="project-sidebar-item"
+                type="button"
+                data-project="inventory"
+              >
+                <span class="project-sidebar-index mono"></span>
+                <span class="project-sidebar-name">Inventory System</span>
               </button>
             </div>
           </div>
 
+          
           <div class="project-sidebar-group">
             <h3 class="project-sidebar-group-title">UI / UX</h3>
-            <div class="project-sidebar-list">
-              <button
-                class="project-sidebar-item"
-                type="button"
-                data-project="pathwise"
-              >
-                <span class="project-sidebar-index mono">04</span>
-                <span class="project-sidebar-name"
-                  >PathWise Mobile Project</span
+
+            <!-- Web Design Section -->
+            <div class="project-sidebar-subgroup">
+              <h4 class="project-sidebar-subgroup-title">Web Design</h4>
+              <div class="project-sidebar-list">
+                <button
+                  class="project-sidebar-item"
+                  type="button"
+                  data-project="wheretoknow"
                 >
-              </button>
-              <button
-                class="project-sidebar-item"
-                type="button"
-                data-project="wheretoknow"
-              >
-                <span class="project-sidebar-index mono">05</span>
-                <span class="project-sidebar-name">Where to Know</span>
-              </button>
-              <button
-                class="project-sidebar-item"
-                type="button"
-                data-project="yourride"
-              >
-                <span class="project-sidebar-index mono">06</span>
-                <span class="project-sidebar-name">YourRide Landing Page</span>
-              </button>
-              <button
-                class="project-sidebar-item"
-                type="button"
-                data-project="devialet"
-              >
-                <span class="project-sidebar-index mono">07</span>
-                <span class="project-sidebar-name"
-                  >Devialet Phantom Landing Page</span
+                  <span class="project-sidebar-index mono"></span>
+                  <span class="project-sidebar-name">Where to Know</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Mobile App Design Section -->
+            <div class="project-sidebar-subgroup">
+              <h4 class="project-sidebar-subgroup-title">Mobile App Design</h4>
+              <div class="project-sidebar-list">
+                <button
+                  class="project-sidebar-item"
+                  type="button"
+                  data-project="pathwise"
                 >
-              </button>
+                  <span class="project-sidebar-index mono"></span>
+                  <span class="project-sidebar-name">PathWise Mobile Project</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Hero Section -->
+            <div class="project-sidebar-subgroup">
+              <h4 class="project-sidebar-subgroup-title">Hero Section</h4>
+              <div class="project-sidebar-list">
+                <button
+                  class="project-sidebar-item"
+                  type="button"
+                  data-project="yourride"
+                >
+                  <span class="project-sidebar-index mono"></span>
+                  <span class="project-sidebar-name">YourRide Landing Page</span>
+                </button>
+                <button
+                  class="project-sidebar-item"
+                  type="button"
+                  data-project="devialet"
+                >
+                  <span class="project-sidebar-index mono"></span>
+                  <span class="project-sidebar-name">Devialet Phantom Landing Page</span>
+                </button>
+              </div>
             </div>
           </div>
         </aside>
@@ -345,21 +370,35 @@
                 engaging and responsive interface.
               </p>
               <ul class="project-meta mono">
-                <li>Built with: HTML5, CSS3, JavaScript, Firebase Hosting</li>
+                <li>Built with: React, TypeScript, Vite, Tailwind CSS</li>
               </ul>
               <div class="project-features">
                 <div class="project-features-title mono">
                   Features &amp; Implementation
                 </div>
                 <ul class="project-features-list">
-                  <li>Responsive landing page optimized for all devices.</li>
-                  <li>Modern hero section with promotional content.</li>
-                  <li>Interactive navigation and smooth scrolling.</li>
-                  <li>Organized menu sections with clear visual hierarchy.</li>
-                  <li>Reusable frontend components for maintainability.</li>
-                  <li>Optimized loading performance and responsive layouts.</li>
+                  <li>Secure user authentication with Firebase (Sign Up, Login, Logout).</li>
+                  <li>Guest browsing with protected actions (cart and checkout require login).</li>
+                  <li>Personalized shopping cart, favorites, saved addresses, and order history per user.</li>
+                  <li>Delivery and Pick-up ordering system with interactive map location picker.</li>
+                  <li>Product customization, vouchers, discounts, and real-time order management.</li>
+                  <li>Responsive, mobile-first UI inspired by modern food delivery platforms.</li>
+                  <li>Cloud-hosted user data and orders using Firebase Firestore.</li>
+                </ul>
+                <div class="project-features-title mono">
+                  Future Implementations
+                </div>
+                <ul class="project-features-list">
+                  <li>Online payment integration (Cards).</li>
+                  <li>Real-time order tracking and status updates.</li>
+                  <li>Push notifications for order confirmations and updates. Customer ratings and product reviews.</li>
+                  <li>Loyalty rewards, coupons, and promotional campaigns. Sales analytics and reporting dashboard.</li>
+                  <li>Multi-branch management with branch-specific inventory.</li>
+                  <li>AI-powered food recommendations based on user preferences.</li>
+                  <li>Delivery rider tracking with live map integration.</li>
                 </ul>
               </div>
+              
               <div class="project-viewer-actions">
                 <a
                   href="https://bun-and-bite-88537.web.app/checkout/type"
@@ -473,6 +512,93 @@
             </div>
           </article>
 
+          <!-- 04 Inventory System -->
+          <article class="project-viewer-panel" data-panel="inventory">
+            <div class="project-viewer-media">
+              <div class="project-media" data-carousel aria-hidden="true">
+                <div class="project-media-track">
+                  <div class="project-media-slide">
+                    <img
+                      src="assets/projects/project04-1.png"
+                      alt="Inventory Pro Sign-in Page screenshot"
+                      class="project-media-img"
+                      onerror="this.style.display = 'none'"
+                    />
+                    <span class="project-media-placeholder mono"></span>
+                  </div>
+                  <div class="project-media-slide">
+                    <img
+                      src="assets/projects/project04-2.png"
+                      alt="Inventory Pro Dashboard Page screenshot"
+                      class="project-media-img"
+                      onerror="this.style.display = 'none'"
+                    />
+                    <span class="project-media-placeholder mono"></span>
+                  </div>
+                </div>
+                <button
+                  class="project-media-nav prev"
+                  type="button"
+                  aria-label="Previous image"
+                >
+                  &#8249;
+                </button>
+                <button
+                  class="project-media-nav next"
+                  type="button"
+                  aria-label="Next image"
+                >
+                  &#8250;
+                </button>
+                <div class="project-media-dots">
+                  <button
+                    class="is-active"
+                    type="button"
+                    aria-label="Show slide 1"
+                  ></button>
+                </div>
+              </div>
+            </div>
+            <div class="project-viewer-body">
+              <div class="project-viewer-eyebrow mono">Websites &mdash; 04</div>
+              <h3>Inventory System</h3>
+              <p>
+                A web-based platform designed to organize products,
+                monitor live stock levels, and automate manual inventory tracking. 
+                It features real-time search, custom filters, and reporting tools to help teams track updates 
+                and make faster purchasing decisions.
+              </p>
+              <ul class="project-meta mono">
+                <li>
+                  Built with: HTML5, CSS3, JavaScript, Firebase Firestore, Firebase Hosting
+                </li>
+              </ul>
+              <div class="project-features">
+                <div class="project-features-title mono">
+                  Features &amp; Implementation
+                </div>
+                <ul class="project-features-list">
+                  <li>
+                    Managed product records and monitored live stock levels.
+                  </li>
+                  <li>Integrated automated low-stock alerts and reorder levels.</li>
+                  <li>Implemented search, filtering, and CSV data import/export.</li>
+                  <li>Maintained detailed supplier records linked to inventory.</li>
+                  <li>Built a responsive dashboard with real-time analytics.</li>
+                </ul>
+              </div>
+              <div class="project-viewer-actions">
+                <a
+                  href="https://inventory-00.web.app/"
+                  class="btn-primary project-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Visit website</a
+                >
+              </div>
+            </div>
+          </article>
+
           <!-- 04 PathWise Mobile Project -->
           <article class="project-viewer-panel" data-panel="pathwise">
             <div class="project-viewer-media">
@@ -532,17 +658,16 @@
               </div>
             </div>
             <div class="project-viewer-body">
-              <div class="project-viewer-eyebrow mono">UI / UX &mdash; 04</div>
+              <div class="project-viewer-eyebrow mono">MOBILE APP DESIGN &mdash; 01</div>
               <h3>PathWise Mobile Project</h3>
               <p>
-                Designed a comprehensive mobile application prototype
+                Designed a comprehensive mobile application 
                 emphasizing usability, accessibility, and scalable UI
                 components.
               </p>
               <ul class="project-meta mono">
                 <li>
-                  Built with: Figma, Mobile UI/UX Design, Interactive
-                  Prototyping, Design System
+                  Built with: Figma, Mobile UI/UX Design, Design System
                 </li>
               </ul>
               <div class="project-features">
@@ -628,7 +753,7 @@
               </div>
             </div>
             <div class="project-viewer-body">
-              <div class="project-viewer-eyebrow mono">UI / UX &mdash; 05</div>
+              <div class="project-viewer-eyebrow mono">WEB DESIGN &mdash; 01</div>
               <h3>Where to Know</h3>
               <p>
                 Designed a business intelligence dashboard for hotel monthly
@@ -722,7 +847,7 @@
               </div>
             </div>
             <div class="project-viewer-body">
-              <div class="project-viewer-eyebrow mono">UI / UX &mdash; 06</div>
+              <div class="project-viewer-eyebrow mono">HERO SECTION &mdash; 01</div>
               <h3>YourRide Landing Page</h3>
               <p>
                 Designed a modern landing page concept for an electric vehicle
@@ -817,7 +942,7 @@
               </div>
             </div>
             <div class="project-viewer-body">
-              <div class="project-viewer-eyebrow mono">UI / UX &mdash; 07</div>
+              <div class="project-viewer-eyebrow mono">HERO SECTION &mdash; 02</div>
               <h3>Devialet Phantom Landing Page</h3>
               <p>
                 Designed a luxury product landing page highlighting the Devialet
@@ -940,3 +1065,4 @@
     <script src="script.js?v=1.3"></script>
   </body>
 </html>
+
