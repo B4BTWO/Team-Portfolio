@@ -1136,9 +1136,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   var mobileDockQuery = window.matchMedia("(max-width: 860px)");
   var mobileDock = null;
-  var themeToggle = document.querySelector(".theme-toggle");
-  var themeToggleParent = themeToggle && themeToggle.parentNode;
-  var themeToggleNextSibling = themeToggle && themeToggle.nextSibling;
 
   function dockIcon(path) {
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + path + "</svg>";
@@ -1154,6 +1151,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ["about.html", "About", '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/>'],
         ["services.html", "Services", '<path d="M4 7h16M4 12h16M4 17h10"/><circle cx="17" cy="17" r="3"/>'],
         ["contact.html", "Contact", '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>'],
+        ["#theme", "Theme", '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>'],
       ];
 
       mobileDock = document.createElement("nav");
@@ -1162,38 +1160,47 @@ document.addEventListener("DOMContentLoaded", function () {
       var panel = document.createElement("div");
       panel.className = "mobile-dock__panel";
       items.forEach(function (item) {
-        var link = document.createElement("a");
-        link.className = "mobile-dock__item";
-        link.href = item[0];
-        link.setAttribute("aria-label", item[1]);
-        link.setAttribute("data-label", item[1]);
-        if (currentPage === item[0]) link.setAttribute("aria-current", "page");
-        link.innerHTML = dockIcon(item[2]);
-        panel.appendChild(link);
-      });
-      mobileDock.appendChild(panel);
-      document.body.appendChild(mobileDock);
-
-      if (themeToggle) {
-        themeToggle.classList.add("mobile-dock-theme");
-        themeToggle.setAttribute("data-label", "Theme");
-        themeToggle.setAttribute("aria-pressed", document.documentElement.classList.contains("dark-mode") ? "true" : "false");
-        panel.appendChild(themeToggle);
-        if (!themeToggle.dataset.themeBound) {
-          themeToggle.addEventListener("click", function () {
+        var itemIndex = items.indexOf(item);
+        var control = document.createElement(item[0] === "#theme" ? "button" : "a");
+        control.className = "mobile-dock__item";
+        if (item[0] === "#theme") {
+          control.type = "button";
+          control.setAttribute("aria-pressed", String(document.documentElement.classList.contains("dark-mode")));
+          control.addEventListener("click", function () {
             var isDark = document.documentElement.classList.toggle("dark-mode");
             localStorage.setItem("theme", isDark ? "dark" : "light");
-            themeToggle.setAttribute("aria-pressed", String(isDark));
+            control.setAttribute("aria-pressed", String(isDark));
           });
-          themeToggle.dataset.themeBound = "true";
+        } else {
+          control.href = item[0];
+          if (currentPage === item[0]) control.setAttribute("aria-current", "page");
         }
-      }
+        control.setAttribute("aria-label", item[1]);
+        control.setAttribute("data-label", item[1]);
+        control.style.setProperty("--dock-angle", (itemIndex - 3) * 24 + "deg");
+        control.style.setProperty("--dock-delay", itemIndex * 28 + "ms");
+        control.style.setProperty("--dock-radius", "clamp(96px, 28vw, 132px)");
+        control.innerHTML = dockIcon(item[2]);
+        panel.appendChild(control);
+      });
+
+      var launcher = document.createElement("button");
+      launcher.type = "button";
+      launcher.className = "mobile-dock__launcher";
+      launcher.setAttribute("aria-label", "Open navigation");
+      launcher.setAttribute("aria-expanded", "false");
+      launcher.setAttribute("data-label", "Menu");
+      launcher.innerHTML = dockIcon('<path d="M5 8h14M5 12h14M5 16h14"/>');
+      launcher.addEventListener("click", function () {
+        var isOpen = mobileDock.classList.toggle("is-open");
+        launcher.setAttribute("aria-expanded", String(isOpen));
+        launcher.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
+        launcher.setAttribute("data-label", isOpen ? "Close" : "Menu");
+      });
+      panel.appendChild(launcher);
+      mobileDock.appendChild(panel);
+      document.body.appendChild(mobileDock);
     } else if (!matches && mobileDock) {
-      if (themeToggle && themeToggleParent) {
-        themeToggle.classList.remove("mobile-dock-theme");
-        themeToggle.removeAttribute("data-label");
-        themeToggleParent.insertBefore(themeToggle, themeToggleNextSibling);
-      }
       mobileDock.remove();
       mobileDock = null;
     }
