@@ -1148,7 +1148,6 @@ document.addEventListener("DOMContentLoaded", function () {
         ["index.html", "Home", '<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1Z"/>'],
         ["project.html", "Work", '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5"/>'],
         ["teams.html", "Team", '<circle cx="9" cy="8" r="3"/><path d="M3 20c.6-3.1 2.7-5 6-5s5.4 1.9 6 5M16 5.5a3 3 0 0 1 0 5M18 15c1.7.5 2.7 1.8 3 3.8"/>'],
-        ["about.html", "About", '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/>'],
         ["services.html", "Services", '<path d="M4 7h16M4 12h16M4 17h10"/><circle cx="17" cy="17" r="3"/>'],
         ["contact.html", "Contact", '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>'],
         ["#theme", "Theme", '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>'],
@@ -1159,8 +1158,9 @@ document.addEventListener("DOMContentLoaded", function () {
       mobileDock.setAttribute("aria-label", "Mobile navigation");
       var panel = document.createElement("div");
       panel.className = "mobile-dock__panel";
+      var strip = document.createElement("div");
+      strip.className = "mobile-dock__strip";
       items.forEach(function (item) {
-        var itemIndex = items.indexOf(item);
         var control = document.createElement(item[0] === "#theme" ? "button" : "a");
         control.className = "mobile-dock__item";
         if (item[0] === "#theme") {
@@ -1177,11 +1177,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         control.setAttribute("aria-label", item[1]);
         control.setAttribute("data-label", item[1]);
-        control.style.setProperty("--dock-angle", (itemIndex - 3) * 24 + "deg");
-        control.style.setProperty("--dock-delay", itemIndex * 28 + "ms");
-        control.style.setProperty("--dock-radius", "clamp(96px, 28vw, 132px)");
         control.innerHTML = dockIcon(item[2]);
-        panel.appendChild(control);
+        strip.appendChild(control);
       });
 
       var launcher = document.createElement("button");
@@ -1190,14 +1187,14 @@ document.addEventListener("DOMContentLoaded", function () {
       launcher.setAttribute("aria-label", "Open navigation");
       launcher.setAttribute("aria-expanded", "false");
       launcher.setAttribute("data-label", "Menu");
-      launcher.innerHTML = dockIcon('<path d="M5 8h14M5 12h14M5 16h14"/>');
+      launcher.innerHTML = dockIcon('<path d="M12 5v14M5 12h14"/>');
       launcher.addEventListener("click", function () {
         var isOpen = mobileDock.classList.toggle("is-open");
         launcher.setAttribute("aria-expanded", String(isOpen));
         launcher.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
         launcher.setAttribute("data-label", isOpen ? "Close" : "Menu");
       });
-      panel.appendChild(launcher);
+      panel.append(strip, launcher);
       mobileDock.appendChild(panel);
       document.body.appendChild(mobileDock);
     } else if (!matches && mobileDock) {
