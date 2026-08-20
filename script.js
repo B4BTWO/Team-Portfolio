@@ -1146,7 +1146,7 @@ document.addEventListener("DOMContentLoaded", function () {
       var currentPage = window.location.pathname.split("/").pop() || "index.html";
       var items = [
         ["index.html", "Home", '<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1Z"/>'],
-        ["project.html", "Work", '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5"/>'],
+        ["project.html", "Work", '<path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H10l2 2h6.5A2.5 2.5 0 0 1 21 9.5v8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5Z"/><path d="M3 10h18"/>'],
         ["teams.html", "Team", '<circle cx="9" cy="8" r="3"/><path d="M3 20c.6-3.1 2.7-5 6-5s5.4 1.9 6 5M16 5.5a3 3 0 0 1 0 5M18 15c1.7.5 2.7 1.8 3 3.8"/>'],
         ["services.html", "Services", '<path d="M4 7h16M4 12h16M4 17h10"/><circle cx="17" cy="17" r="3"/>'],
         ["contact.html", "Contact", '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>'],
@@ -1161,6 +1161,7 @@ document.addEventListener("DOMContentLoaded", function () {
       var strip = document.createElement("div");
       strip.className = "mobile-dock__strip";
       items.forEach(function (item) {
+        var itemIndex = items.indexOf(item);
         var control = document.createElement(item[0] === "#theme" ? "button" : "a");
         control.className = "mobile-dock__item";
         if (item[0] === "#theme") {
@@ -1174,9 +1175,30 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
           control.href = item[0];
           if (currentPage === item[0]) control.setAttribute("aria-current", "page");
+          control.addEventListener("click", function (event) {
+            event.preventDefault();
+            if (mobileDock.classList.contains("is-navigating")) return;
+            mobileDock.classList.add("is-navigating");
+            control.classList.add("is-selected");
+
+            for (var particleIndex = 0; particleIndex < 6; particleIndex++) {
+              var particle = document.createElement("span");
+              particle.className = "mobile-dock__particle";
+              particle.style.setProperty("--particle-angle", particleIndex * 60 + "deg");
+              control.appendChild(particle);
+              particle.addEventListener("animationend", function () {
+                this.remove();
+              });
+            }
+
+            window.setTimeout(function () {
+              window.location.href = control.href;
+            }, 360);
+          });
         }
         control.setAttribute("aria-label", item[1]);
         control.setAttribute("data-label", item[1]);
+        control.style.setProperty("--dock-item-delay", itemIndex * 55 + "ms");
         control.innerHTML = dockIcon(item[2]);
         strip.appendChild(control);
       });
@@ -1190,6 +1212,14 @@ document.addEventListener("DOMContentLoaded", function () {
       launcher.innerHTML = dockIcon('<path d="M12 5v14M5 12h14"/>');
       launcher.addEventListener("click", function () {
         var isOpen = mobileDock.classList.toggle("is-open");
+        mobileDock.classList.remove("is-opening");
+        if (isOpen) {
+          void strip.offsetWidth;
+          mobileDock.classList.add("is-opening");
+          window.setTimeout(function () {
+            mobileDock.classList.remove("is-opening");
+          }, 700);
+        }
         launcher.setAttribute("aria-expanded", String(isOpen));
         launcher.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
         launcher.setAttribute("data-label", isOpen ? "Close" : "Menu");

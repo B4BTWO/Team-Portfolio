@@ -1,4 +1,5 @@
 :root {
+  --linear-ease: linear(0, 0.068, 0.19 2.7%, 0.804 8.1%, 1.037, 1.199 13.2%, 1.245, 1.27 15.8%, 1.274, 1.272 17.4%, 1.249 19.1%, 0.996 28%, 0.949, 0.928 33.3%, 0.926, 0.933 36.8%, 1.001 45.6%, 1.013, 1.019 50.8%, 1.018 54.4%, 1 63.1%, 0.995 68%, 1.001 85%, 1);
   --bg: #FCFAFF;
   --ink: #150F22;
   --ink-soft: #58506B;
@@ -883,9 +884,32 @@ footer .socials {
     transition: transform 0.2s ease, color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
   }
 
+  .mobile-dock__item::before {
+    position: absolute;
+    inset: -3px;
+    z-index: -1;
+    border-radius: inherit;
+    background: var(--purple-400);
+    content: "";
+    opacity: 0;
+    transform: scale(0.15);
+  }
+
+  .mobile-dock.is-open.is-opening .mobile-dock__item {
+    opacity: 0;
+    transform: translateY(14px) scale(0.3);
+    animation: mobile-dock-gooey-in 0.62s var(--linear-ease) var(--dock-item-delay) forwards;
+  }
+
+  .mobile-dock.is-open.is-opening .mobile-dock__item::before {
+    animation: mobile-dock-gooey-blob 0.62s ease-out var(--dock-item-delay) both;
+  }
+
   .mobile-dock__launcher {
     position: absolute;
     z-index: 2;
+    top: 0;
+    left: 50%;
     width: 52px;
     height: 52px;
     transform: translate(-50%, -50%);
@@ -913,6 +937,70 @@ footer .socials {
     color: var(--purple-700);
     border-color: var(--purple-400);
     background: var(--lilac-100);
+  }
+
+  .mobile-dock__item.is-selected {
+    color: var(--bg);
+    border-color: var(--purple-700);
+    background: var(--purple-700);
+    animation: mobile-nav-select 0.36s var(--linear-ease, cubic-bezier(0.16, 1, 0.3, 1)) both;
+  }
+
+  .mobile-dock.is-navigating .mobile-dock__strip {
+    animation: mobile-nav-dismiss 0.36s ease both;
+  }
+
+  .mobile-dock__particle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--purple-400);
+    pointer-events: none;
+    animation: mobile-nav-particle 0.36s ease-out both;
+    transform: translate(-50%, -50%) rotate(var(--particle-angle)) translateY(-5px);
+  }
+
+  @keyframes mobile-nav-select {
+    0% { transform: scale(1); }
+    45% { transform: scale(1.18); }
+    100% { transform: scale(1); }
+  }
+
+  @keyframes mobile-nav-dismiss {
+    to { opacity: 0; transform: translate(-50%, 8px) scale(0.94); }
+  }
+
+  @keyframes mobile-nav-particle {
+    0% { opacity: 0; transform: translate(-50%, -50%) rotate(var(--particle-angle)) translateY(-4px) scale(0); }
+    35% { opacity: 1; }
+    100% { opacity: 0; transform: translate(-50%, -50%) rotate(var(--particle-angle)) translateY(-34px) scale(0.7); }
+  }
+
+  @keyframes mobile-dock-gooey-in {
+    0% {
+      opacity: 0;
+      transform: translateY(14px) scale(0.3);
+    }
+    30% { opacity: 1; }
+    55% {
+      opacity: 1;
+      transform: translateY(-4px) scale(1.16, 0.82);
+    }
+    72% { transform: translateY(2px) scale(0.92, 1.08); }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes mobile-dock-gooey-blob {
+    0% { opacity: 0; transform: scale(0.1); }
+    35% { opacity: 0.6; transform: scale(1.45, 0.65); }
+    65% { opacity: 0.25; transform: scale(1.15); }
+    100% { opacity: 0; transform: scale(1.45); }
   }
 
   .mobile-dock__item:active {
