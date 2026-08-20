@@ -820,7 +820,7 @@ footer .socials {
   .mobile-dock {
     position: fixed;
     z-index: 10001;
-    bottom: max(18px, env(safe-area-inset-bottom));
+    bottom: max(58px, calc(env(safe-area-inset-bottom) + 38px));
     left: 50%;
     width: 1px;
     height: 1px;
@@ -969,6 +969,117 @@ footer .socials {
     flex-direction: column;
     gap: 12px;
     padding: 24px 22px;
+  }
+}
+
+/* Mobile type, spacing, and content hierarchy overrides. */
+@media (max-width: 860px) {
+  html { font-size: 16px; }
+
+  body {
+    font-size: 16px;
+    line-height: 1.6;
+    padding-bottom: 120px;
+  }
+
+  section { padding: clamp(52px, 9vw, 72px) clamp(18px, 5.5vw, 34px); }
+
+  .hero {
+    padding: 46px clamp(18px, 5.5vw, 34px) 70px;
+    gap: 30px;
+  }
+
+  .hero h1 {
+    font-size: clamp(38px, 10.5vw, 58px);
+    line-height: 1.06;
+    letter-spacing: -0.045em;
+  }
+
+  .hero p,
+  .section-head p,
+  .contact-hero-sub,
+  .about-grid p,
+  .project-viewer-body p {
+    max-width: 62ch;
+    font-size: clamp(16px, 4.2vw, 18px);
+    line-height: 1.65;
+  }
+
+  .hero p { margin: 18px 0 26px; }
+
+  .eyebrow,
+  .mono { font-size: 11px; letter-spacing: 0.1em; }
+
+  .section-head { margin-bottom: 30px; gap: 12px; }
+
+  .section-head h2,
+  #contact h2,
+  .home-cta-box h2 {
+    font-size: clamp(30px, 8.5vw, 42px);
+    line-height: 1.12;
+    letter-spacing: -0.035em;
+  }
+
+  .btn-row { flex-wrap: wrap; gap: 12px; }
+  .btn-primary { padding: 13px 22px; font-size: 15px; }
+  .btn-ghost { font-size: 15px; }
+
+  #about {
+    margin: 20px 14px 56px !important;
+    padding: clamp(32px, 8vw, 48px) clamp(20px, 6vw, 30px);
+    border-radius: 24px;
+  }
+
+  .about-grid { gap: 32px; }
+  .about-grid p { font-weight: 500; }
+  .stats { gap: 14px; }
+  .stat-num { font-size: clamp(31px, 9vw, 42px); }
+
+  .stat-label,
+  .work-tags,
+  .work-body span,
+  .service-row p { font-size: 13px; line-height: 1.55; }
+
+  .work-card { border-radius: 16px; }
+  .work-thumb { height: clamp(170px, 52vw, 220px); }
+  .work-body { padding: 18px 18px 20px; }
+
+  .work-body h3,
+  .service-row h3,
+  .contact-info h3 { font-size: 20px; line-height: 1.25; }
+
+  .service-row {
+    grid-template-columns: 32px 1fr;
+    gap: 12px;
+    padding: 22px 0;
+    align-items: start;
+  }
+
+  .service-row p { grid-column: 2; }
+  .contact-form { padding: clamp(20px, 6vw, 28px); }
+
+  .contact-email {
+    font-size: clamp(16px, 4.5vw, 19px);
+    overflow-wrap: anywhere;
+  }
+
+  .project-browser-section { padding: 28px clamp(18px, 5.5vw, 34px) 40px; }
+  .project-browser { grid-template-columns: 1fr; gap: 28px; }
+  .project-sidebar { position: static; gap: 22px; }
+  .project-sidebar-group-title,
+  .project-sidebar-subgroup-title { font-size: 12px; }
+  .project-sidebar-item { min-height: 44px; padding: 10px; }
+  .project-viewer-body { padding: 22px 0 0; }
+
+  .project-viewer-body h3 {
+    font-size: clamp(25px, 7vw, 34px);
+    line-height: 1.16;
+  }
+
+  .footer-section,
+  footer {
+    padding-right: clamp(18px, 5.5vw, 34px);
+    padding-left: clamp(18px, 5.5vw, 34px);
   }
 }
 
