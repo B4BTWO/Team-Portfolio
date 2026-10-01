@@ -1,20 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
-import { ArrowDown, ArrowDownRight, ArrowUpRight, Code2, Layers3, Orbit, Sparkles } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { ArrowDown, ArrowDownRight, ArrowUpRight, Code2, Layers3, Sparkles } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { CosmicCanvas } from './components/CosmicCanvas';
-import { CosmicSound } from './components/CosmicSound';
+import { ConstellationNav } from './components/ConstellationNav';
 import { ConstellationProjects } from './components/ConstellationProjects';
 
 gsap.registerPlugin(ScrollTrigger);
-
-const sections = [
-  { id: 'origin', label: 'Origin', number: '01' },
-  { id: 'about', label: 'Approach', number: '02' },
-  { id: 'work', label: 'Work', number: '03' },
-  { id: 'stack', label: 'Toolkit', number: '04' },
-  { id: 'contact', label: 'Contact', number: '05' },
-];
 
 const toolkit = [
   { label: 'Frontend', items: ['React', 'TypeScript', 'JavaScript', 'HTML5', 'CSS3', 'Tailwind CSS', 'Vite', 'Vue.js', 'JSON', 'Shopify', 'WordPress'] },
@@ -25,39 +17,80 @@ const toolkit = [
 
 function App() {
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [currentSection, setCurrentSection] = useState(0);
   const [activeProjectIdx, setActiveProjectIdx] = useState<number | null>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
   const appRef = useRef<HTMLDivElement>(null);
+  const scrollToRef = useRef<(top: number) => void>(() => undefined);
 
   useEffect(() => {
+    let scrollTarget = window.scrollY;
+    let scrollFrame = 0;
+    let smoothing = false;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     const updateProgress = () => {
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      setScrollProgress(maxScroll > 0 ? window.scrollY / maxScroll : 0);
+      const nextProgress = maxScroll > 0 ? window.scrollY / maxScroll : 0;
+      setScrollProgress((previous) => Math.abs(previous - nextProgress) > 0.002 ? nextProgress : previous);
+      if (!smoothing) scrollTarget = window.scrollY;
     };
+    const animateScroll = () => {
+      const difference = scrollTarget - window.scrollY;
+      if (Math.abs(difference) < 0.65) {
+        window.scrollTo(0, scrollTarget);
+        scrollFrame = 0;
+        smoothing = false;
+        return;
+      }
+      window.scrollTo(0, window.scrollY + difference * 0.065);
+      scrollFrame = window.requestAnimationFrame(animateScroll);
+    };
+    const setScrollTarget = (top: number) => {
+      const maximum = document.documentElement.scrollHeight - window.innerHeight;
+      scrollTarget = Math.max(0, Math.min(top, maximum));
+      if (reducedMotion) {
+        window.scrollTo(0, scrollTarget);
+        return;
+      }
+      smoothing = true;
+      if (!scrollFrame) scrollFrame = window.requestAnimationFrame(animateScroll);
+    };
+    scrollToRef.current = setScrollTarget;
+
+    const onWheel = (event: WheelEvent) => {
+      if (reducedMotion || event.ctrlKey || (event.target as HTMLElement).closest('[data-native-scroll]')) return;
+      event.preventDefault();
+      setScrollTarget(scrollTarget + event.deltaY * 0.82);
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.altKey || event.ctrlKey || event.metaKey || (event.target as HTMLElement).closest('[data-native-scroll]') || /^(BUTTON|INPUT|TEXTAREA|SELECT)$/.test((event.target as HTMLElement).tagName)) return;
+      const page = window.innerHeight * 0.84;
+      const keyTargets: Record<string, number> = {
+        ArrowDown: window.scrollY + 90,
+        ArrowUp: window.scrollY - 90,
+        PageDown: window.scrollY + page,
+        PageUp: window.scrollY - page,
+        Home: 0,
+        End: document.documentElement.scrollHeight,
+        ' ': window.scrollY + page,
+      };
+      if (keyTargets[event.key] !== undefined) {
+        event.preventDefault();
+        setScrollTarget(keyTargets[event.key]);
+      }
+    };
+
     updateProgress();
     window.addEventListener('scroll', updateProgress, { passive: true });
-
-    const observers = sections.map(({ id }, index) => {
-      const element = document.getElementById(id);
-      if (!element) return null;
-      return new IntersectionObserver(([entry]) => {
-        if (entry.isIntersecting) setCurrentSection(index);
-      }, { rootMargin: '-38% 0px -48% 0px' });
-    });
-    observers.forEach((observer, index) => {
-      const element = document.getElementById(sections[index].id);
-      if (element) observer?.observe(element);
-    });
+    window.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('keydown', onKeyDown);
 
     const ctx = gsap.context(() => {
       gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((item) => {
         gsap.fromTo(item, { y: 42, opacity: 0 }, {
           y: 0,
           opacity: 1,
-          duration: 1,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: item, start: 'top 88%', once: true },
+          ease: 'none',
+          scrollTrigger: { trigger: item, start: 'top 94%', end: 'top 58%', scrub: 1.1 },
         });
       });
       gsap.utils.toArray<HTMLElement>('[data-parallax]').forEach((item) => {
@@ -71,62 +104,42 @@ function App() {
 
     return () => {
       window.removeEventListener('scroll', updateProgress);
-      observers.forEach((observer) => observer?.disconnect());
+      window.removeEventListener('wheel', onWheel);
+      window.removeEventListener('keydown', onKeyDown);
+      if (scrollFrame) window.cancelAnimationFrame(scrollFrame);
       ctx.revert();
     };
   }, []);
 
-  const navigate = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-    setMenuOpen(false);
-  };
+  const navigate = useCallback((id: string) => {
+    const destination = document.getElementById(id);
+    if (destination) scrollToRef.current(destination.getBoundingClientRect().top + window.scrollY);
+  }, []);
 
   return (
     <div ref={appRef} className="universe">
-      <CosmicCanvas scrollProgress={scrollProgress} activeProjectIndex={activeProjectIdx} onSelectProject={setActiveProjectIdx} />
-      <div className="grain" aria-hidden="true" />
-      <header className="masthead">
-        <a className="wordmark" href="#origin" onClick={(event) => { event.preventDefault(); navigate('origin'); }} aria-label="Kenneth Bianzon, back to top">
-          <span className="wordmark-mark"><Orbit size={15} strokeWidth={1.5} /></span>
-          <span>KCB<span className="wordmark-period">.</span></span>
-        </a>
-        <div className="masthead-center"><span className="status-light" /> FULL-STACK ENGINEERING&nbsp; / &nbsp;DIGITAL CRAFT</div>
-        <button className="menu-toggle" type="button" onClick={() => setMenuOpen((open) => !open)} aria-expanded={menuOpen} aria-label="Toggle navigation">
-          <span>{menuOpen ? 'CLOSE' : 'EXPLORE'}</span><span className={`menu-icon ${menuOpen ? 'open' : ''}`} />
-        </button>
-      </header>
-
-      <aside className={`orbit-nav ${menuOpen ? 'orbit-nav-open' : ''}`} aria-label="Page sections">
-        <span className="orbit-nav-caption">FLIGHT PATH</span>
-        <div className="orbit-nav-line" aria-hidden="true"><span style={{ height: `${Math.max(8, scrollProgress * 100)}%` }} /></div>
-        {sections.map((section, index) => (
-          <button key={section.id} type="button" className={`orbit-nav-point ${currentSection === index ? 'active' : ''}`} onClick={() => navigate(section.id)} aria-label={`Go to ${section.label}`}>
-            <span className="nav-point-dot" /><span className="nav-point-label"><small>{section.number}</small>{section.label}</span>
-          </button>
-        ))}
-      </aside>
-      <div className="audio-dock"><CosmicSound /></div>
+      <CosmicCanvas scrollProgress={scrollProgress} />
 
       <main>
         <section id="origin" className="hero section-shell">
-          <div className="hero-topline"><span>DESIGN-MINDED DEVELOPMENT&nbsp; / &nbsp;FULL STACK</span><span>SCROLL TO TRAVEL <ArrowDown size={13} /></span></div>
+          <div className="hero-topline"><span className="hero-mark">KCB<span>.</span></span><span>FULL-STACK DEVELOPER&nbsp; / &nbsp;CREATIVE BUILDER</span></div>
+          <ConstellationNav onNavigate={navigate} />
           <div className="hero-main">
-            <p className="hero-kicker"><span className="kicker-dash" /> FULL-STACK DEVELOPER &amp; CREATIVE BUILDER</p>
+            <p className="hero-kicker"><span className="kicker-dash" /> KENNETH CYRUS BIANZON</p>
             <h1 className="hero-title">MAKING<br /><span>THE WEB</span><br /><em>FEEL ALIVE.</em></h1>
             <div className="hero-aside">
-              <span className="hero-aside-index">01 — A LITTLE INTRO</span>
+              <span className="hero-aside-index">SCROLL OR SELECT A STAR</span>
               <p>I’m <strong>Kenneth Cyrus Bianzon</strong> — I bring thoughtful design and dependable engineering together to build digital experiences people want to explore.</p>
               <button type="button" className="text-link" onClick={() => navigate('work')}>EXPLORE MY WORK <ArrowDownRight size={15} /></button>
             </div>
           </div>
-          <div className="hero-bottomline"><span>CREATIVE FRONTEND&nbsp; · &nbsp;FULL-STACK SYSTEMS&nbsp; · &nbsp;3D WEB</span><span className="hero-scroll-cue"><span className="scroll-cue-line" /> KEEP GOING</span></div>
-          <div className="hero-caption" data-parallax aria-hidden="true">A DIGITAL<br />UNIVERSE, IN<br />THE MAKING.</div>
+          <div className="hero-bottomline"><span>CREATIVE FRONTEND&nbsp; · &nbsp;FULL-STACK SYSTEMS&nbsp; · &nbsp;3D WEB</span><span className="hero-scroll-cue">KEEP GOING <ArrowDown size={13} /></span></div>
         </section>
 
         <section id="about" className="about section-shell">
           <div className="section-index" data-reveal><span>02</span><span>THE POINT OF VIEW</span></div>
-          <div className="about-content">
-            <p className="about-overline" data-reveal>DESIGN WITH INTENT. BUILD WITH CARE.</p>
+          <div className="about-content" id="experience">
+            <p className="about-overline" data-reveal id="approach">DESIGN WITH INTENT. BUILD WITH CARE.</p>
             <h2 className="about-statement" data-reveal>Good code makes it work.<br /><span>Great craft makes it matter.</span></h2>
             <div className="about-bottom" data-reveal>
               <div className="portrait-frame"><img src="/assets/kenneth.png" alt="Kenneth Cyrus Bianzon" /><span className="portrait-frame-label">KENNETH C. BIANZON / 01</span></div>

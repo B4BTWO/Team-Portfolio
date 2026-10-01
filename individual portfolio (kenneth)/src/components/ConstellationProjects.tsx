@@ -99,7 +99,7 @@ export function ConstellationProjects({ activeProjectIndex, onSelectProject }: P
     </div>
     <div className="project-filters" role="group" aria-label="Filter projects">{filters.map((name) => <button type="button" key={name} onClick={() => { setFilter(name); setHovered(null); }} className={filter === name ? 'filter-active' : ''}>{name}<span>{name === 'All' ? work.length : work.filter((project) => project.group === name).length}</span></button>)}</div>
     {opened && <div className="work-dialog-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) setOpened(null); }}>
-      <article className="work-dialog" role="dialog" aria-modal="true" aria-labelledby="work-dialog-title">
+      <article className="work-dialog" data-native-scroll role="dialog" aria-modal="true" aria-labelledby="work-dialog-title">
         <button type="button" className="dialog-close" onClick={() => setOpened(null)} aria-label="Close project"><X size={20} /></button>
         <div className="dialog-visual"><img src={`/assets/projects/${opened.image}`} alt={`${opened.title} project preview`} /></div>
         <div className="dialog-copy"><span className="preview-type">{opened.group} <i /> KENNETH BIANZON</span><h2 id="work-dialog-title">{opened.title}</h2><p>{opened.description}</p><span className="dialog-number">PROJECT&nbsp; / &nbsp;{String(work.indexOf(opened) + 1).padStart(2, '0')}</span></div>
