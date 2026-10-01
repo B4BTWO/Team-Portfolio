@@ -17,10 +17,10 @@ const sections = [
 ];
 
 const toolkit = [
-  { label: 'Frontend', items: ['React', 'TypeScript', 'JavaScript', 'HTML5', 'CSS3', 'Tailwind CSS', 'Vite', 'Vue.js'] },
+  { label: 'Frontend', items: ['React', 'TypeScript', 'JavaScript', 'HTML5', 'CSS3', 'Tailwind CSS', 'Vite', 'Vue.js', 'JSON', 'Shopify', 'WordPress'] },
   { label: 'Motion & 3D', items: ['GSAP', 'Three.js', 'WebGL', 'React Three Fiber', 'Drei', 'Web Audio API', 'SVG animation'] },
   { label: 'Backend & cloud', items: ['Node.js', 'Express', 'Firebase', 'Firestore', 'MongoDB', 'REST APIs', 'Cloud Functions', 'Laravel'] },
-  { label: 'Product & tools', items: ['Figma', 'UI / UX', 'Design systems', 'Git / GitHub', 'Webflow', 'Responsive design', 'Accessibility'] },
+  { label: 'Product & tools', items: ['Figma', 'UI / UX', 'Design systems', 'Git / GitHub', 'Canva', 'Webflow', 'Notion', 'Vercel', 'Responsive design', 'Accessibility'] },
 ];
 
 function App() {
@@ -90,7 +90,7 @@ function App() {
           <span className="wordmark-mark"><Orbit size={15} strokeWidth={1.5} /></span>
           <span>KCB<span className="wordmark-period">.</span></span>
         </a>
-        <div className="masthead-center"><span className="status-light" /> AVAILABLE FOR SELECT PROJECTS</div>
+        <div className="masthead-center"><span className="status-light" /> FULL-STACK ENGINEERING&nbsp; / &nbsp;DIGITAL CRAFT</div>
         <button className="menu-toggle" type="button" onClick={() => setMenuOpen((open) => !open)} aria-expanded={menuOpen} aria-label="Toggle navigation">
           <span>{menuOpen ? 'CLOSE' : 'EXPLORE'}</span><span className={`menu-icon ${menuOpen ? 'open' : ''}`} />
         </button>
@@ -109,7 +109,7 @@ function App() {
 
       <main>
         <section id="origin" className="hero section-shell">
-          <div className="hero-topline"><span>INDEPENDENT DEVELOPER&nbsp; / &nbsp;MANILA, PH</span><span>SCROLL TO TRAVEL <ArrowDown size={13} /></span></div>
+          <div className="hero-topline"><span>DESIGN-MINDED DEVELOPMENT&nbsp; / &nbsp;FULL STACK</span><span>SCROLL TO TRAVEL <ArrowDown size={13} /></span></div>
           <div className="hero-main">
             <p className="hero-kicker"><span className="kicker-dash" /> FULL-STACK DEVELOPER &amp; CREATIVE BUILDER</p>
             <h1 className="hero-title">MAKING<br /><span>THE WEB</span><br /><em>FEEL ALIVE.</em></h1>
@@ -133,7 +133,7 @@ function App() {
               <div className="about-copy">
                 <p className="quote-mark">“</p>
                 <blockquote>I build digital experiences with the care of a craftsperson and the curiosity of an explorer — so your next idea can go further.</blockquote>
-                <p className="about-bio">From interface to infrastructure, I enjoy connecting the details: a clear flow, a playful interaction, a fast page, and a system that holds together behind it.</p>
+                <p className="about-bio">From interface to infrastructure, I enjoy connecting the details: a clear flow, a playful interaction, a fast page, and a system that holds together behind it. I worked as a freelance web developer at Magnify Vision Media from March to April 2026, building responsive interfaces with React, Shopify, MongoDB, Firebase, and API integrations.</p>
                 <button type="button" className="text-link" onClick={() => navigate('stack')}>SEE HOW I BUILD <ArrowDownRight size={15} /></button>
               </div>
             </div>
@@ -165,7 +165,7 @@ function App() {
           <div className="section-index" data-reveal><span>05</span><span>THE NEXT CHAPTER</span></div>
           <div className="contact-orbit" aria-hidden="true"><span /><span /><span /><span /></div>
           <div className="contact-content" data-reveal><p className="contact-overline"><Sparkles size={14} /> HAVE A GOOD ONE IN MIND?</p><h2>Let’s make<br /><em>it mean something.</em></h2><p className="contact-copy">Tell me what you’re imagining. I’d love to help bring it down to earth.</p>
-            <a className="contact-button" href="https://github.com/kcbianzon" target="_blank" rel="noreferrer">START A CONVERSATION <ArrowUpRight size={17} /></a>
+            <a className="contact-button" href="https://www.linkedin.com/in/kenneth-cyrus-bianzon-344a62428/" target="_blank" rel="noreferrer">START A CONVERSATION <ArrowUpRight size={17} /></a>
             <a className="resume-link" href="/resumes/kenneth.pdf" target="_blank" rel="noreferrer">TAKE A LOOK AT MY RÉSUMÉ <ArrowUpRight size={13} /></a>
           </div>
           <footer className="footer"><a className="footer-mark" href="#origin" onClick={(event) => { event.preventDefault(); navigate('origin'); }}>KCB<span>.</span></a><span>© {new Date().getFullYear()} KENNETH CYRUS BIANZON</span><a href="https://github.com/kcbianzon" target="_blank" rel="noreferrer"><Code2 size={14} /> GITHUB <ArrowUpRight size={12} /></a><span>BUILT WITH CURIOSITY&nbsp; ✳</span></footer>

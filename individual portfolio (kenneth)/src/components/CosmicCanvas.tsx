@@ -320,11 +320,13 @@ export const CosmicCanvas: React.FC<CosmicCanvasProps> = ({
 
     // --- ANIMATION LOOP ---
     let animationFrameId: number;
-    const clock = new THREE.Clock();
+    const clock = new THREE.Timer();
+    clock.connect(document);
 
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
-      const elapsedTime = clock.getElapsedTime();
+      clock.update();
+      const elapsedTime = clock.getElapsed();
       const p = scrollRef.current; // 0 (top) to 1 (bottom)
 
       // Smooth mouse lerp
@@ -387,6 +389,7 @@ export const CosmicCanvas: React.FC<CosmicCanvasProps> = ({
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
+      clock.disconnect();
       renderer.dispose();
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);

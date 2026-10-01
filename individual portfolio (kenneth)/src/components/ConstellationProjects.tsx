@@ -11,7 +11,7 @@ const work: Work[] = [
   { title: 'AIRE Digital', group: 'Sites', image: 'webdesign1-1.png', index: 4, description: 'Developed a modern B2B lead generation and digital business services website for AIRE Digital, specializing in lead generation, prospect research, data enrichment, and business development solutions. The website focuses on professional service presentation, clear conversion paths, and a clean, international business-oriented design.' },
   { title: 'Buy-Coffe', group: 'Sites', image: 'project4-1.png', description: 'Buy-Coffe is a creator-support landing page inspired by the “buy me a coffee” model, designed for the Analyze concept to help creators share their work, invite community support, and turn appreciation into recurring encouragement. The design focuses on storytelling, social proof, and a low-friction path for supporters to contribute.' },
   { title: 'e-Sweets', group: 'Sites', image: 'website6-1.png', description: 'An elegant e-commerce platform for a boutique bakery. Customers can seamlessly browse a curated selection of freshly prepared cakes and pastries, or easily request custom orders for special celebrations.' },
-  { title: 'Novara Real Estate', group: 'Sites', image: 'project5-1.png', description: 'Novara Real Estates is a modern full-stack real estate web application designed for discovering, searching, and managing residential and luxury properties. The platform allows users to browse listings, apply advanced filters, view detailed property information, save favorites, contact agents, explore property locations, and calculate estimated mortgage payments through a responsive and intuitive interface.' },
+  { title: 'Novara Real Estate', group: 'Sites', image: 'project5-1.png', description: 'A better place to belong. Novara Real Estates is a modern full-stack real estate web application designed for discovering, searching, and managing residential and luxury properties. The platform allows users to browse listings, apply advanced filters, view detailed property information, save favorites, contact agents, explore property locations, and calculate estimated mortgage payments through a responsive and intuitive interface.' },
   { title: 'FlowDesk', group: 'Sites', image: 'project6-1.png', description: 'A focused SaaS landing page for an all-in-one small-business workspace. It clearly presents tools for sales, inventory, expenses, customers, reporting, and team management, supported by product previews, pricing, and conversion-focused calls to action.' },
   { title: 'Signalcraft', group: 'Sites', image: 'project7-1.png', description: 'A bold B2B landing page for a decision-intelligence platform that turns scattered research into clear, collaborative next steps. The narrative guides visitors through signal discovery, workflow orchestration, review, security, and real-world use cases.' },
 
@@ -54,9 +54,14 @@ export function ConstellationProjects({ activeProjectIndex, onSelectProject }: P
 
   useEffect(() => {
     if (!opened) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
     const close = (event: KeyboardEvent) => { if (event.key === 'Escape') setOpened(null); };
     window.addEventListener('keydown', close);
-    return () => window.removeEventListener('keydown', close);
+    return () => {
+      window.removeEventListener('keydown', close);
+      document.body.style.overflow = previousOverflow;
+    };
   }, [opened]);
 
   const focusProject = (project: Work) => {
