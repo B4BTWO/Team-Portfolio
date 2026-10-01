@@ -108,8 +108,8 @@ export const CosmicCanvas: React.FC<CosmicCanvasProps> = ({
         void main() {
           vec3 viewDir = normalize(-vPosition);
           float intensity = pow(0.72 - dot(vNormal, viewDir), 2.8);
-          vec3 atmosphereColor = mix(vec3(0.1, 0.4, 1.0), vec3(0.65, 0.2, 0.95), intensity);
-          gl_FragColor = vec4(atmosphereColor, intensity * 0.95);
+          vec3 atmosphereColor = mix(vec3(0.13, 0.42, 0.58), vec3(0.68, 0.88, 0.48), intensity);
+          gl_FragColor = vec4(atmosphereColor, intensity * 0.62);
         }
       `,
       blending: THREE.AdditiveBlending,
@@ -178,12 +178,12 @@ export const CosmicCanvas: React.FC<CosmicCanvasProps> = ({
     // --- 3. CONSTELLATION PROJECT SYSTEM (INTERACTIVE) ---
     // 6 primary project star nodes with radiant pulses
     const projectNodesData = [
-      { name: 'VIBE//TIX', pos: new THREE.Vector3(-3.2, 0.8, -12), color: 0x38bdf8 },
-      { name: 'Bun & Bite', pos: new THREE.Vector3(2.8, 1.4, -14), color: 0xf43f5e },
-      { name: 'Magnify Vision', pos: new THREE.Vector3(-1.8, -1.6, -16), color: 0xa855f7 },
-      { name: 'AIRE Digital', pos: new THREE.Vector3(3.5, -1.2, -18), color: 0x10b981 },
-      { name: 'NewDay Coaching', pos: new THREE.Vector3(-0.4, 2.6, -20), color: 0xf59e0b },
-      { name: 'Sonix & Outride UI', pos: new THREE.Vector3(1.2, -2.8, -22), color: 0xec4899 },
+      { name: 'Magnify Vision Media', pos: new THREE.Vector3(-3.2, 0.8, -12), color: 0xb8e9ee },
+      { name: 'Bun & Bite', pos: new THREE.Vector3(2.8, 1.4, -14), color: 0xd0fb6a },
+      { name: 'NewDay Child Coaching', pos: new THREE.Vector3(-1.8, -1.6, -16), color: 0x9fcddb },
+      { name: 'VIBE//TIX', pos: new THREE.Vector3(3.5, -1.2, -18), color: 0xd0fb6a },
+      { name: 'AIRE Digital', pos: new THREE.Vector3(-0.4, 2.6, -20), color: 0xabe6d4 },
+      { name: 'Buy-Coffe', pos: new THREE.Vector3(1.2, -2.8, -22), color: 0xd0fb6a },
     ];
 
     const projectGroup = new THREE.Group();

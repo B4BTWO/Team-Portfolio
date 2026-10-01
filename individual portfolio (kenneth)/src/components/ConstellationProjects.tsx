@@ -26,16 +26,16 @@ const work: Work[] = [
   { title: 'Smila', group: 'Web design', image: 'smila-skincare-web-design.png', description: 'Created a premium skincare experience for Smila that turns a beauty routine into a calm, confident journey through products, rituals, and ingredient-led storytelling.' },
   { title: 'Roocn', group: 'Web design', image: 'roocn-roofing-web-design.png', description: 'Designed a trustworthy roofing-services website for Roocn, combining proof-led messaging, service clarity, and strong local calls to action for homeowners and commercial customers.' },
 
-  { title: 'Cognita AI', group: 'Experiments', image: 'herosection1-1.png', description: 'A standalone hero section exploration across a distinct industry and visual mood.' },
-  { title: 'Sonix Audio', group: 'Experiments', image: 'herosection2-1.png', description: 'A standalone hero section exploration across a distinct industry and visual mood.' },
-  { title: 'Workli', group: 'Experiments', image: 'herosection3-1.png', description: 'A standalone hero section exploration across a distinct industry and visual mood.' },
-  { title: 'Aerix', group: 'Experiments', image: 'herosection4-1.png', description: 'A standalone hero section exploration across a distinct industry and visual mood.' },
-  { title: 'Velor', group: 'Experiments', image: 'herosection5-1.png', description: 'A standalone hero section exploration across a distinct industry and visual mood.' },
-  { title: 'Outride', group: 'Experiments', image: 'herosection6.png', description: 'A standalone hero section exploration across a distinct industry and visual mood.' },
-  { title: 'Payora', group: 'Experiments', image: 'herosection7.png', description: 'A standalone hero section exploration across a distinct industry and visual mood.' },
-  { title: 'Nexride', group: 'Experiments', image: 'herosection8.png', description: 'A standalone hero section exploration across a distinct industry and visual mood.' },
-  { title: 'Industera', group: 'Experiments', image: 'herosection9.png', description: 'A standalone hero section exploration across a distinct industry and visual mood.' },
-  { title: 'Signet', group: 'Experiments', image: 'herosection10.png', description: 'A standalone hero section exploration across a distinct industry and visual mood.' },
+  { title: 'Cognita AI', group: 'Experiments', image: 'herosection1-1.png', description: 'A set of standalone hero section explorations across different industries and moods. Tap any tile to view the full design.' },
+  { title: 'Sonix Audio', group: 'Experiments', image: 'herosection2-1.png', description: 'A set of standalone hero section explorations across different industries and moods. Tap any tile to view the full design.' },
+  { title: 'Workli', group: 'Experiments', image: 'herosection3-1.png', description: 'A set of standalone hero section explorations across different industries and moods. Tap any tile to view the full design.' },
+  { title: 'Aerix', group: 'Experiments', image: 'herosection4-1.png', description: 'A set of standalone hero section explorations across different industries and moods. Tap any tile to view the full design.' },
+  { title: 'Velor', group: 'Experiments', image: 'herosection5-1.png', description: 'A set of standalone hero section explorations across different industries and moods. Tap any tile to view the full design.' },
+  { title: 'Outride', group: 'Experiments', image: 'herosection6.png', description: 'A set of standalone hero section explorations across different industries and moods. Tap any tile to view the full design.' },
+  { title: 'Payora', group: 'Experiments', image: 'herosection7.png', description: 'A set of standalone hero section explorations across different industries and moods. Tap any tile to view the full design.' },
+  { title: 'Nexride', group: 'Experiments', image: 'herosection8.png', description: 'A set of standalone hero section explorations across different industries and moods. Tap any tile to view the full design.' },
+  { title: 'Industera', group: 'Experiments', image: 'herosection9.png', description: 'A set of standalone hero section explorations across different industries and moods. Tap any tile to view the full design.' },
+  { title: 'Signet', group: 'Experiments', image: 'herosection10.png', description: 'A set of standalone hero section explorations across different industries and moods. Tap any tile to view the full design.' },
 ];
 
 const filters = ['All', 'Sites', 'Mobile', 'Web design', 'Experiments'] as const;
